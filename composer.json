@@ -1,0 +1,16 @@
+{
+  "name": "amelhaff/college-cuisine",
+  "authors": [
+    {
+      "name": "Aaron Melhaff",
+      "email": "amelhaff2@mail.greenriver.edu"
+    },
+    {
+      "name": "Nolan Medina",
+      "email": "nmedina4@mail.greenriver.edu"
+    }
+  ],
+  "require": {
+    "bcosca/fatfree-core": "dev-master"
+  }
+}
