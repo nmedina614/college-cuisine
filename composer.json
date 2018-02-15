@@ -1,5 +1,5 @@
 {
-  "name": "amelhaff/college-cuisine",
+  "name": "CollegeCuisine",
   "authors": [
     {
       "name": "Aaron Melhaff",
@@ -12,5 +12,8 @@
   ],
   "require": {
     "bcosca/fatfree-core": "dev-master"
-  }
+  },
+  "autoload": {
+      "classmap": ["classes/"]
+   }
 }
