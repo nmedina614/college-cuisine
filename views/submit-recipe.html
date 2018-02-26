@@ -1,44 +1,44 @@
 <div class="container">
-    <form method="post" action="submit-recipie.html">
+    <form method="post" action="new-recipe">
 
         <!-- form complex example -->
         <div class="form-row mt-4">
             <div class="col-sm-5 pb-3">
                 <label for="recipeName">Recipe name</label>
-                <input type="text" class="form-control" id="recipeName" placeholder="Name of Recipe">
+                <input type="text" class="form-control" id="recipeName" placeholder="Name of Recipe" name="recipeName">
             </div>
             <div class="col-sm-3 pb-3">
-                <label for="exampleCtrl">Prep Time</label>
-                <input type="text" class="form-control" id="exampleCtrl">
+                <label for="prepTime">Prep Time</label>
+                <input type="text" class="form-control" id="prepTime" name="prepTime">
             </div>
             <div class="col-sm-4 pb-3">
 
 
-                <label for="exampleCtrl">Cook Time</label>
-                <input type="text" class="form-control" id="exampleCtrl">
+                <label for="cookTime">Cook Time</label>
+                <input type="text" class="form-control" id="cookTime" name="cookTime">
 
             </div>
             <div class="col-sm-6 pb-3">
-                <label for="exampleFirst">Servings</label>
-                <input type="text" class="form-control" id="exampleFirst">
+                <label for="servings">Servings</label>
+                <input type="text" class="form-control" id="servings" name="servs">
             </div>
             <div class="col-sm-6 pb-3">
-                <label for="exampleLast">Calories</label>
-                <input type="text" class="form-control" id="exampleLast">
+                <label for="calories">Calories</label>
+                <input type="text" class="form-control" id="calories" name="cals">
             </div>
             <div class="col-sm-6 pb-3">
-                <label for="exampleCity">Ingredients</label>
-                <input type="text" class="form-control" id="exampleCity">
+                <label for="ingredients">Ingredients</label>
+                <input type="text" class="form-control" id="ingredients" name="ingreds">
             </div>
 
             <div class="col-sm-6 pb-3">
-                <label for="exampleZip">Directions</label>
-                <input type="text" class="form-control" id="exampleZip">
+                <label for="directions">Directions</label>
+                <input type="text" class="form-control" id="directions" name="directs">
             </div>
 
             <div class="col-md-12 pb-3">
-                <label for="exampleMessage">Notes</label>
-                <textarea class="form-control" id="exampleMessage"></textarea>
+                <label for="notes">Notes</label>
+                <textarea class="form-control" id="notes" name="notes"></textarea>
                 <small class="text-info">
                     Add any comments you have here.
                 </small>
@@ -47,7 +47,7 @@
 
 
 
-
+        <input class="btn btn-primary" type="submit" value="Submit">
 
 
 

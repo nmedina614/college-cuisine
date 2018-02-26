@@ -46,11 +46,12 @@ $f3->route('GET|POST /login', function($f3) {
 
 
 // Sumbit Recipie rout
-$f3->route('GET|POST /new-recipie', function($f3) {
+$f3->route('GET|POST /new-recipe', function($f3) {
 
     $f3->set('title', 'Submit a new Recipie');
     $f3->set('content',
-        'views/submit-recipie.html');
+        'views/submit-recipe.html');
+    //print_r($_POST);
 
     if(isset($_POST['submit'])) {
         Model::login($_POST['username'],$_POST['password']);
