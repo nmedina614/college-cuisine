@@ -63,19 +63,25 @@ $f3->route('GET|POST /login', function($f3) {
 });
 
 
-// Submit Recipe rout
-$f3->route('GET|POST /new-recipe', function($f3) {
+// Sumbit Recipe route
+$f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 
-    $f3->set('title', 'Submit a new Recipie');
+    //SQL to get Recipe Name
+    $f3->set('title', $params['recipeID']);
     $f3->set('content',
-        'views/submit-recipe.html');
+        'views/recipe.html');
+    $f3->set('recipeID', $params['recipeID']);
+    //print_r($_POST);
 
-
+    if(isset($_POST['submit'])) {
+        Model::login($_POST['username'],$_POST['password']);
+    }
 
 
 
     $template = new Template();
     echo $template->render('views/base.html');
 });
+
 
 $f3->run();
