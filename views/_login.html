@@ -1,27 +1,29 @@
 
 
 <div class="container">
-
-    <form class="form-signin" method="post" action="#">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <label for="username" class="sr-only">Username</label>
-        <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
-        <check if="{{ @invalid == true }}">
-            <true>
-                <div class="alert alert-danger" role="alert">
-                    Invalid Username or Password!
+    <div class="row">
+        <div class="col-10 col-md-8 col-lg-6 offset-1 offset-md-2 offset-md-3">
+            <form class="form-signin" method="post" action="#">
+                <h2 class="form-signin-heading">Please sign in</h2>
+                <label for="username" class="sr-only">Username</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+                <check if="{{ @invalid == true }}">
+                    <true>
+                        <div class="alert alert-danger" role="alert">
+                            Invalid Username or Password!
+                        </div>
+                    </true>
+                </check>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="remember-me"> Remember me
+                    </label>
                 </div>
-            </true>
-        </check>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" value="remember-me"> Remember me
-            </label>
+                <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit">Sign in</button>
+            </form>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit">Sign in</button>
-    </form>
-
+    </div>
 </div> <!-- /container -->
 

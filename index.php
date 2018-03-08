@@ -22,10 +22,7 @@ $f3->route('GET /', function($f3) {
     $title = "College Cuisine";
 
     // List of paths to stylesheets.
-    $styles = array(
-        //$f3->get('BASE').'/styles/main.css',
-        //$f3->get('BASE').'/styles/login.css'
-    );
+    $styles = array();
 
     // List of paths for sub-templates being used.
     $includes = array(
@@ -53,10 +50,7 @@ $f3->route('GET|POST /login', function($f3) {
     $title = "Login";
 
     // List of paths to stylesheets.
-    $styles = array(
-        //$f3->get('BASE').'/styles/main.css',
-        //$f3->get('BASE').'/styles/login.css'
-    );
+    $styles = array();
 
     // List of paths for sub-templates being used.
     $includes = array(
@@ -101,23 +95,29 @@ $f3->route('GET|POST /login', function($f3) {
 });
 
 
-// Sumbit Recipe route
+// Submit Recipe route
 $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 
     // Title to use in template.
     $title = $params['recipeID'];
 
     // List of paths to stylesheets.
-    $styles = array();
+    $styles = array(
+        // If you need a stylesheet do
+        //$f3->get('BASE').'/assets/styles/STYLESHEET-NAME.css
+    );
 
     // List of paths for sub-templates being used.
     $includes = array(
-        'views/_nav',
+        'views/_nav.html',
         'views/_recipe.html'
     );
 
     // List of paths to scripts being used.
-    $scripts = array();
+    $scripts = array(
+        // If you need a script do
+        //$f3->get('BASE').'/assets/scripts/SCRIPT-NAME.js
+    );
 
     $f3->set('title',    $title);
     $f3->set('styles',   $styles);
@@ -166,10 +166,8 @@ $f3->route('GET /profiles/@user', function($f3, $params) {
         Model::login($_POST['username'],$_POST['password']);
     }
 
-
-
     $template = new Template();
-    echo $template->render('views/base.html');
+    echo $template->render('views/_base.html');
 });
 
 
