@@ -192,7 +192,7 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
     // List of paths to scripts being used.
     $scripts = array(
         // If you need a script do
-        //$f3->get('BASE').'/assets/scripts/SCRIPT-NAME.js
+        $f3->get('BASE').'/assets/scripts/recipe-scripts.js'
     );
 
     $f3->set('title',    $title);
