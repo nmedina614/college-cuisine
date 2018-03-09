@@ -43,7 +43,7 @@ class Model
 
         $statement->bindParam(':username', $_POST['username'], PDO::PARAM_STR);
 
-        $statement->bindParam(':password', sha1($_POST['password']), PDO::PARAM_STR);
+        $statement->bindParam(':password', hash('sha256', $_POST['password'], false), PDO::PARAM_STR);
 
         $statement->execute();
 
