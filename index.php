@@ -6,11 +6,25 @@
 //Begin session
 session_start();
 
+ini_set('display_errors',1);
+error_reporting(E_ALL);
+
 // Require f3
 require_once('vendor/autoload.php');
 
 // Setup
 $f3 = Base::instance();
+$f3->set('DEBUG',3);
+
+$f3->set('ONERROR',
+    function($f3) {
+        // recursively clear existing output buffers:
+        while (ob_get_level())
+            ob_end_clean();
+        // your fresh page here:
+        echo $f3->get('ERROR.text');
+    }
+);
 
 // Establish database connection.
 Model::connect();

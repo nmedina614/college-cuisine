@@ -68,7 +68,7 @@ class Model
         if(isset($result['username'])) {
 
             // Store user information in Session.
-            $_SESSION['id'] = $result['userid'];
+            $_SESSION['userid'] = $result['userid'];
             $_SESSION['username'] = $result['username'];
             $_SESSION['email'] = $result['email'];
             $_SESSION['privilege'] = $result['privilege'];
@@ -129,15 +129,17 @@ class Model
     {
         if(authorityCheck(1)) {
 
-            $sql = 'SELECT * FROM user WHERE NOT userid=:currentId';
+            $sql = 'SELECT * FROM user';
 
             $statement = self::$_dbh->prepare($sql);
 
-            $statement->bindParam(':currentId', $_SESSION['userid'], PDO::PARAM_INT);
-
             $statement->execute();
 
-            return $statement;
+
+
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            return $result;
 
 
         } else echo 'Invalid request!';
