@@ -50,7 +50,9 @@ $f3->route('GET|POST /login', function($f3) {
     $title = "Login";
 
     // List of paths to stylesheets.
-    $styles = array();
+    $styles = array(
+        $f3->get('BASE').'/assets/styles/login.css'
+    );
 
     // List of paths for sub-templates being used.
     $includes = array(
@@ -95,7 +97,7 @@ $f3->route('GET|POST /login', function($f3) {
 });
 
 
-// View New Recipe
+// Submit Recipe route
 $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 
     // Title to use in template.
@@ -140,7 +142,13 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
     echo $template->render('views/_base.html');
 });
 
+// User Profile route
 $f3->route('GET /profiles/@user', function($f3, $params) {
+
+    // Reroute if not logged in!
+    if(!Model::loginStatus()) {
+        $f3->reroute('/');
+    }
 
     // Title to use in template.
     $title = $params['user'];
@@ -157,42 +165,48 @@ $f3->route('GET /profiles/@user', function($f3, $params) {
     // List of paths to scripts being used.
     $scripts = array();
 
+    // Store page attributes to hive.
     $f3->set('title',    $title);
     $f3->set('styles',   $styles);
     $f3->set('includes', $includes);
     $f3->set('scripts',  $scripts);
 
+    // Make login attempt.
     if(isset($_POST['submit'])) {
         Model::login($_POST['username'],$_POST['password']);
     }
 
+    // Display template.
     $template = new Template();
     echo $template->render('views/_base.html');
 });
 
+// Administration route.
+$f3->route('GET /administration', function($f3) {
 
-// Submit new Recipe
-$f3->route('GET|POST /recipe/new-recipe', function($f3) {
+    // If user is not a mod or higher, return home.
+    if(!Model::loginStatus(1)){
+        $f3->reroute('/');
+    }
 
     // Title to use in template.
-    $title = "Submit your Recipe!";
+    $title = "Administration";
 
     // List of paths to stylesheets.
     $styles = array(
-        // If you need a stylesheet do
-        //$f3->get('BASE').'/assets/styles/STYLESHEET-NAME.css
+        'https://cdn.datatables.net/v/bs4/dt-1.10.16/af-2.2.2/b-1.5.1/r-2.2.1/sl-1.2.5/datatables.min.css'
     );
 
     // List of paths for sub-templates being used.
     $includes = array(
         'views/_nav.html',
-        'views/_submit-recipe.html'
+        'views/_administration.html'
     );
 
     // List of paths to scripts being used.
     $scripts = array(
-        // If you need a script do
-        $f3->get('BASE').'/assets/scripts/recipe-scripts.js'
+        'https://cdn.datatables.net/v/bs4/dt-1.10.16/af-2.2.2/b-1.5.1/r-2.2.1/sl-1.2.5/datatables.min.js',
+        $f3->get('BASE').'/assets/scripts/administration.js'
     );
 
     $f3->set('title',    $title);
@@ -200,14 +214,7 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
     $f3->set('includes', $includes);
     $f3->set('scripts',  $scripts);
 
-    //print_r($_POST);
-
-    if(isset($_POST['submit'])) {
-        Model::login($_POST['username'],$_POST['password']);
-    }
-
-
-
+    // Display Template
     $template = new Template();
     echo $template->render('views/_base.html');
 });

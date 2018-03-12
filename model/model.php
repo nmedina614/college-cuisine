@@ -8,10 +8,19 @@
  */
 require $_SERVER['DOCUMENT_ROOT'] . "/../config/cc_config.php";
 
+/**
+ * Class Model
+ *
+ * TODO
+ */
 class Model
 {
+    // Variable containing database object.
     private static $_dbh;
 
+    /**
+     * TODO
+     */
     public static function connect()
     {
         if(!isset($_dbh)) {
@@ -25,6 +34,11 @@ class Model
         }
     }
 
+    /**
+     * TODO
+     *
+     * @return bool
+     */
     public static function login() {
 
         // Flush any old login sessions.
@@ -57,7 +71,7 @@ class Model
             $_SESSION['id'] = $result['userid'];
             $_SESSION['username'] = $result['username'];
             $_SESSION['email'] = $result['email'];
-            $_SESSION['clearance'] = $result['clearance'];
+            $_SESSION['privilege'] = $result['privilege'];
 
             return true;
 
@@ -65,5 +79,67 @@ class Model
 
 
 
+    }
+
+    /**
+     * Method that takes a number. If the privilege is
+     * greater or equal to the input parameter, then
+     * return true. Otherwise, return false. The options are:
+     * 0: basic log in.
+     * 1: moderator login.
+     * 2: admin login.
+     *
+     * @param $needed Authority level needed.
+     * @return Returns whether the authority level is great enough.
+     */
+    public static function loginStatus($needed = 0)
+    {
+
+        // Check logged in status.
+        if(empty($_SESSION['username'])) {
+            return false;
+        }
+
+        // Assign authority level.
+        switch($_SESSION['privilege']) {
+            case 'basic' :
+                $authority = 0;
+                break;
+
+            case 'moderator':
+                $authority = 1;
+                break;
+
+            case 'admin':
+                $authority = 2;
+                break;
+
+            default:
+                break;
+        }
+
+        // Return whether authority is high enough.
+        return ($authority >= $needed);
+    }
+
+    /**
+     * TODO
+     */
+    public static function viewUsers()
+    {
+        if(authorityCheck(1)) {
+
+            $sql = 'SELECT * FROM user WHERE NOT userid=:currentId';
+
+            $statement = self::$_dbh->prepare($sql);
+
+            $statement->bindParam(':currentId', $_SESSION['userid'], PDO::PARAM_INT);
+
+            $statement->execute();
+
+            return $statement;
+
+
+        } else echo 'Invalid request!';
     }
 }
