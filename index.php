@@ -116,8 +116,7 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
     $title = "Submit your Recipe!";
     // List of paths to stylesheets.
     $styles = array(
-        // If you need a stylesheet do
-        //$f3->get('BASE').'/assets/styles/STYLESHEET-NAME.css
+        $f3->get('BASE').'/assets/styles/icons.css'
     );
     // List of paths for sub-templates being used.
     $includes = array(

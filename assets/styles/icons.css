@@ -1,0 +1,14 @@
+.icon-add {
+    height: inherit;
+}
+
+.icon-delete {
+    margin: 0;
+    padding: 0;
+}
+
+.btn.btn-ingredient-delete img.icon-delete {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin: 0 !important;
+}
