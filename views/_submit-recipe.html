@@ -46,9 +46,15 @@
 
             </div>
 
-            <div class="col-sm-6 pb-3">
-                <span>Directions</span>
-                <input type="text" class="form-control" id="directions" name="directs">
+            <div class="col-md-6 pb-3">
+                <span>Direction <button type="button" class="btn btn-sm btn-light" id="btn-add-direct">Add <img class="icon-add" src="{{ @BASE }}/assets/images/icons/plus.svg" alt=""></button></span>
+                <div id="direction-list">
+                    <div class="input-group mb-3 direct-item">
+                        <input type="text" class="form-control" placeholder="Add Directions Here" class="input-directions">
+                        <button class="btn btn-danger btn-direct-delete" type="button"><img class="icon-delete" src="{{ @BASE }}/assets/images/icons/close.svg" alt="Remove"></button>
+                    </div>
+                </div>
+
             </div>
 
         </div>

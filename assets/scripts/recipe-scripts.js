@@ -20,3 +20,25 @@ $('#btn-add-ingredient').click(function() {
     });
 });
 
+$('.btn-direct-delete').click(function() {
+    var parent = this.parentElement;
+    $(parent).remove();
+});
+
+$('#btn-add-direct').click(function() {
+    const CLONE_HTML =
+        '<div class="input-group mb-3 direct-item">\n' +
+        '    <input type="text" class="form-control" placeholder="Add Directions Here" class="input-directions">\n' +
+        '    <button class="btn btn-danger btn-direct-delete" type="button"><img class="icon-delete" src="../assets/images/icons/close.svg" alt="Remove"></button>\n' +
+        '</div>';
+
+    console.log(CLONE_HTML);
+    $('#direction-list').append(CLONE_HTML);
+
+    // Add event listener to new node.
+    $('.btn-direct-delete').click(function() {
+        var parent = this.parentElement;
+        $(parent).remove();
+    });
+});
+
