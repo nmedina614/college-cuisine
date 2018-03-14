@@ -1,19 +1,19 @@
 <div class="container">
     <div class="row mt-2">
         <div class="col-12 col-sm-10 col-md-8 offset-sm-1 offset-md-2 p-3 bg-light rounded">
-            <div class="mx-auto w-sm-75 w-lg-100 p-4 bg-white rounded">
+            <div class="mx-auto w-sm-75 w-lg-100 p-4 bg-white rounded clearfix">
                 <h2 class="text-secondary">Profile</h2>
                 <hr>
-                <div class="w-50 float-left">
+                <div class="w-75 float-left">
                     <p>User ID: {{ $_SESSION['userid'] }}</p>
                     <p>Username: {{ $_SESSION['username'] }}</p>
                     <p>Email: {{ $_SESSION['email']}}</p>
                     <p>Privilege: {{ $_SESSION['privilege'] }}</p>
                 </div>
-                <div class="w-50 float-right">
-                    <button type="button" class="btn btn-outline-secondary" id="btn-change-password">Change Password</button>
+                <div class="w-25 float-right">
+                    <button type="button" class="btn btn-sm btn-outline-secondary mb-2" id="btn-change-password">Change Password</button>
                     <br>
-                    <button type="button" class="btn btn-outline-secondary" id="btn-change-email">Change Email</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-change-email">Change Email</button>
                 </div>
             </div>
 

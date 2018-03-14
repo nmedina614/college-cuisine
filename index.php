@@ -16,16 +16,6 @@ require_once('vendor/autoload.php');
 $f3 = Base::instance();
 $f3->set('DEBUG',3);
 
-$f3->set('ONERROR',
-    function($f3) {
-        // recursively clear existing output buffers:
-        while (ob_get_level())
-            ob_end_clean();
-        // your fresh page here:
-        echo $f3->get('ERROR.text');
-    }
-);
-
 // Establish database connection.
 Model::connect();
 
@@ -190,7 +180,7 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 $f3->route('GET /profiles/@user', function($f3, $params) {
 
     // Reroute if not logged in!
-    if(!Model::loginStatus()) {
+    if(!Model::authorized()) {
         $f3->reroute('/');
     }
 
@@ -229,7 +219,7 @@ $f3->route('GET /profiles/@user', function($f3, $params) {
 $f3->route('GET /administration', function($f3) {
 
     // If user is not a mod or higher, return home.
-    if(!Model::loginStatus(1)){
+    if(!Model::authorized(1)){
         $f3->reroute('/');
     }
 
@@ -253,10 +243,14 @@ $f3->route('GET /administration', function($f3) {
         $f3->get('BASE').'/assets/scripts/administration.js'
     );
 
+    $results = Model::viewUsers();
+
+    // Store variables in hive.
     $f3->set('title',    $title);
     $f3->set('styles',   $styles);
     $f3->set('includes', $includes);
     $f3->set('scripts',  $scripts);
+    $f3->set('rows',     $results);
 
     // Display Template
     $template = new Template();

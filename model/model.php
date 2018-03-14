@@ -39,7 +39,8 @@ class Model
      *
      * @return bool
      */
-    public static function login() {
+    public static function login()
+    {
 
         // Flush any old login sessions.
         session_reset();
@@ -92,33 +93,15 @@ class Model
      * @param $needed Authority level needed.
      * @return Returns whether the authority level is great enough.
      */
-    public static function loginStatus($needed = 0)
+    public static function authorized($needed = 0)
     {
 
-        // Check logged in status.
-        if(empty($_SESSION['username'])) {
-            return false;
-        }
+        if(empty($_SESSION['username'])) return false;
 
-        // Assign authority level.
-        switch($_SESSION['privilege']) {
-            case 'basic' :
-                $authority = 0;
-                break;
+        $authority =
+            ($_SESSION['privilege'] == 'admin')     ? 2 :
+            ($_SESSION['privilege'] == 'moderator') ? 1 : 0;
 
-            case 'moderator':
-                $authority = 1;
-                break;
-
-            case 'admin':
-                $authority = 2;
-                break;
-
-            default:
-                break;
-        }
-
-        // Return whether authority is high enough.
         return ($authority >= $needed);
     }
 
@@ -127,21 +110,94 @@ class Model
      */
     public static function viewUsers()
     {
-        if(authorityCheck(1)) {
+        if(self::authorized(1)) {
+            $sql = 'SELECT * FROM user WHERE privilege=\'basic\'';
 
-            $sql = 'SELECT * FROM user';
-
+            // Prepare query
             $statement = self::$_dbh->prepare($sql);
 
+            // Execute.
             $statement->execute();
 
+            // Return results of query.
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+    }
+
+    /**
+     * TODO
+     *
+     * @param $userid
+     */
+    public static function resetPassword($userid)
+    {
+        $newPassword = self::generatePassword();
+
+        $updateQuery = 'UPDATE user SET password=:newPassword WHERE userid=SHA2(:userid, 256)';
+
+        $statement = self::$_dbh->prepare($updateQuery);
+
+        $statement->bindParam(':newPassword', $newPassword, PDO::PARAM_STR);
+        $statement->bindParam(':userid', $userid, PDO::PARAM_INT);
+
+        $statement->execute();
+
+        // Then get email.
+
+        $emailQuery = "SELECT email FROM user WHERE userid='$userid'";
+
+        $result = self::$_dbh->query($emailQuery);
+
+        $targetEmail = $result->fetch(PDO::FETCH_ASSOC)['email'];
 
 
-            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        self::sendPassword($targetEmail, $newPassword, $_SESSION['email']);
+    }
 
-            return $result;
+    /**
+     * TODO
+     *
+     * @param $to
+     * @param $password
+     * @param $sender
+     */
+    public static function sendPassword($to, $password, $sender)
+    {
 
+        $subject = "Password reset";
+        $txt = "Your new email is $password";
+        $headers = "From: $sender";
 
-        } else echo 'Invalid request!';
+        mail($to,$subject,$txt,$headers);
+    }
+
+    /**
+     * TODO
+     *
+     * Taken from https://stackoverflow.com/questions/1837432/how-to-generate-random-password-with-php
+     *
+     * @param int $length
+     * @return string
+     */
+    public static function generatePassword($length = 8) {
+        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $count = mb_strlen($chars);
+
+        for ($i = 0, $result = ''; $i < $length; $i++) {
+            $index = rand(0, $count - 1);
+            $result .= mb_substr($chars, $index, 1);
+        }
+
+        return $result;
+    }
+
+    /**
+     * TODO
+     */
+    public static function verifyHash() {
+        // Generate random 32 character hash and assign it to a local variable.
+        return md5( rand(0,1000));
     }
 }
+?>
