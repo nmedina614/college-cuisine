@@ -69,10 +69,6 @@ class Model
         if(isset($result['username'])) {
 
             // Store user information in Session.
-//            $_SESSION['userid'] = $result['userid'];
-//            $_SESSION['username'] = $result['username'];
-//            $_SESSION['email'] = $result['email'];
-//            $_SESSION['privilege'] = $result['privilege'];
             $_SESSION['user'] = serialize(new User(
                 $result['userid'],
                 $result['username'],
@@ -88,8 +84,15 @@ class Model
 
     }
 
+    /**
+     * @param $privilege
+     * @return int
+     */
     public static function getAuthority($privilege)
     {
+        return ($privilege == 'admin')     ? 2 :
+               ($privilege == 'moderator') ? 1 :
+               ($privilege == 'basic')     ? 0 : -1;
 
     }
 
@@ -109,9 +112,7 @@ class Model
 
         if(empty($GLOBALS['user'])) return false;
 
-        $authority =
-            ($GLOBALS['user']->getPrivilege() == 'admin')     ? 2 :
-            ($GLOBALS['user']->getPrivilege() == 'moderator') ? 1 : 0;
+        $authority = self::getAuthority($GLOBALS['user']->getPrivilege());
 
         return ($authority >= $needed);
     }

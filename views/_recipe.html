@@ -1,7 +1,7 @@
 <div class="container">
 
     <!-- Portfolio Item Heading -->
-    <h1 class="my-4">{{@recipe[0][name]}}</h1>
+    <h1 class="my-4">{{@recipe[name]}}</h1>
 
     <!-- Portfolio Item Row -->
     <div class="row">
@@ -14,17 +14,22 @@
             <h3 class="my-3">Details</h3>
             <!-- Small Details added w/ SQL -->
             <ul>
-                <li>Servings: {{@recipe[0][servings]}}</li>
-                <li>Calories per Serving: {{@recipe[0][cal]}}</li>
-                <li>Prep Time: {{@recipe[0][prepTime]}}</li>
-                <li>Cook Time: {{@recipe[0][cookTime]}}</li>
-                <li>Total Time: {{@recipe[0][prepTime] + @recipe[0][cookTime]}}</li>
+                <li>Servings: {{@recipe[servings]}}</li>
+                <li>Calories per Serving: {{@recipe[cal]}}</li>
+                <li>Prep Time: {{@recipe[prepTime]}}</li>
+                <li>Cook Time: {{@recipe[cookTime]}}</li>
+                <li>Total Time: {{@recipe[prepTime] + @recipe[cookTime]}}</li>
             </ul>
             <!--Ingredients SQL -->
             <h3 class="my-3">Ingredients</h3>
-                <!--<ul> -->
-                    <p>{{@recipe[0][ingredients]}}</p>
-                <!--</ul>-->
+            <ul>
+                <repeat group="{{ @ingredients }}" value="{{ @ingredient }}">
+
+                    <li>{{@ingredient}}</li>
+
+                </repeat>
+            </ul>
+
         </div>
 
     </div>
@@ -34,13 +39,19 @@
     <h3 class="my-4"></h3>
 
     <div class="row">
+        <ol>
 
+        <repeat group="{{ @directions }}" value="{{ @direct }}">
+                <li>
+                    <p>{{@direct}}</p>
+                </li>
+            </repeat>
+
+        </ol>
         <!--<div class="col-md-3 col-sm-6 mb-4">
             <h1>1.</h1>
             <p>Boil the spaghetti</p>
         </div>-->
-
-        <p> {{@recipe[0][directions]}} </p>
 
     </div>
     <!-- /.row -->
