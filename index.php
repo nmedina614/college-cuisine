@@ -341,8 +341,9 @@ $f3->route('GET|POST /administration/reset-password [ajax]', function($f3) {
             $_POST['privilege']);
 
         $target->resetPassword();
-        echo 'Sending message to '.$_POST['username'].' at '.$_POST['email'];
-    } else echo "Unauthorized attempt.";
+    }
+
+    echo $f3->error();
 });
 
 
