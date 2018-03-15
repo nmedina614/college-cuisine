@@ -88,6 +88,11 @@ class Model
 
     }
 
+    public static function getAuthority($privilege)
+    {
+
+    }
+
     /**
      * Method that takes a number. If the privilege is
      * greater or equal to the input parameter, then
@@ -152,6 +157,8 @@ class Model
         // Launch Query.
         $statement->execute();
     }
+
+
 
 
 
@@ -235,11 +242,11 @@ class Model
      *      [2] => once finished w/ both, plate pasta then beef on top [3] => Enjoy ) )
      */
 
-        /*echo $sql;
+        echo $sql;
 
         echo $_POST['recipeName'];
 
-        echo  implode(',',$_POST['ingreds']);*/
+        echo  implode(',',$_POST['ingreds']);
 
         $statement->bindParam(':recipeName', $_POST['recipeName'], PDO::PARAM_STR);
         $statement->bindParam(':prepTime', $_POST['prepTime'], PDO::PARAM_STR);
@@ -253,42 +260,5 @@ class Model
         $statement->execute();
 
     }
-
-    /**
-     * TODO
-     */
-    public static function getAllRecipes()
-    {
-        // State query
-        $sql = 'SELECT * FROM `recipe` order by likes DESC';
-
-        // Prepare database query.
-        $statement = self::$_dbh->prepare($sql);
-
-        // Launch Query.
-        $statement->execute();
-
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public static function getRecipe($id)
-    {
-        // State query
-        $sql = 'SELECT * FROM `recipe` WHERE recipeid = :id';
-
-        // Prepare database query.
-        $statement = self::$_dbh->prepare($sql);
-
-        //Bind Params
-        $statement->bindParam(':id', $id, PDO::PARAM_INT);
-
-
-        // Launch Query.
-        $statement->execute();
-
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
-    }
-
 }
-
 ?>
