@@ -39,8 +39,6 @@ $f3->route('GET /', function($f3) {
         'views/_home.html'
     );
 
-    $results = Model::getAllRecipes();
-
     // List of paths to scripts being used.
     $scripts = array();
 
@@ -48,7 +46,6 @@ $f3->route('GET /', function($f3) {
     $f3->set('styles',   $styles);
     $f3->set('includes', $includes);
     $f3->set('scripts',  $scripts);
-    $f3->set('recipes',  $results);
 
     // Display Template
     $template = new Template();
@@ -173,10 +170,7 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 
     // Title to use in template.
-    $title = "College Cuisine";
-
-
-    $result = Model::getRecipe($params['recipeID']);
+    $title = $params['recipeID'];
 
     // List of paths to stylesheets.
     $styles = array(
@@ -200,7 +194,6 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
     $f3->set('styles',   $styles);
     $f3->set('includes', $includes);
     $f3->set('scripts',  $scripts);
-    $f3->set('recipe',  $result);
 
     //SQL to get Recipe Name
 
@@ -328,19 +321,9 @@ $f3->route('GET /administration', function($f3) {
     echo $template->render('views/_base.html');
 });
 
-$f3->route('GET|POST /administration/reset-password [ajax]', function($f3) {
+$f3->route('GET|POST /model/script/reset-password.php', function($f3) {
 
-    $f3->get('AXAJ');
-    if(Model::authorized(1)) {
-        $target = new User($_POST['userid'],
-            $_POST['username'],
-            $_POST['email'],
-            $_POST['privilege']);
 
-        $target->resetPassword();
-    }
-
-    echo $f3->error();
 });
 
 
