@@ -199,5 +199,57 @@ class Model
         // Generate random 32 character hash and assign it to a local variable.
         return md5( rand(0,1000));
     }
+
+    public static function insertRecipe() {
+
+        /*
+     * INSERT INTO `recipe` (
+     * `recipeid`, `name`, `prepTime`, `cookTime`, `servings`, `cal`
+     * , `descript`, `ingredients`, `directions`, `likes`) VALUES
+     * (NULL, 'Spaghetti', '5', '15', '4', '150',
+     * 'A classic Italian dish that is both cheap to make and delicious.',
+     * '16oz of Ground Beef, 16oz of Pasta Noodles, Salt, Pepper, Water, meatsauce',
+     * 'Boil Water, Put noodles in water, fry ground beef in pan
+     *      until cooked, add meat sauce to beef, once pasta is finished along with the
+     *      beef add pasta to plate followed by beef on top',
+     * '5'); */
+
+        // Prepare a select to check if db contains queried params.
+        $sql = 'INSERT INTO `recipe` (`name`, `prepTime`, 
+                `cookTime`, `servings`, `cal`, `descript`, `ingredients`, 
+                `directions`, `likes`) VALUES (:recipeName, :prepTime, 
+                :cookTime, :servings, :cal, :descript, :ingredients,
+                :directions, \'0\')';
+
+        $statement = self::$_dbh->prepare($sql);
+
+        /*
+     * Array ( [recipeName] => Spaghetti [prepTime] => 5 [cookTime] => 15
+     * [servs] => 4 [cals] => 150 [description] => A classic Italian masterpiece that you'll love
+     * [ingreds] => Array ( [0] => 16oz ground beef [1] => meat sauce [2] => water [3] => salt [4]
+     *      => pepper )
+     * [directs] => Array ( [0] => Start boiling water [1] => cook ground beef and add meat sauce to it
+     *      [2] => once finished w/ both, plate pasta then beef on top [3] => Enjoy ) )
+     */
+
+        echo $sql;
+
+        echo $_POST['recipeName'];
+
+        echo  implode(',',$_POST['ingreds']);
+
+        $statement->bindParam(':recipeName', $_POST['recipeName'], PDO::PARAM_STR);
+        $statement->bindParam(':prepTime', $_POST['prepTime'], PDO::PARAM_STR);
+        $statement->bindParam(':cookTime', $_POST['cookTime'], PDO::PARAM_STR);
+        $statement->bindParam(':servings', $_POST['servs'], PDO::PARAM_STR);
+        $statement->bindParam(':cal', $_POST['cals'], PDO::PARAM_STR);
+        $statement->bindParam(':descript', $_POST['description'], PDO::PARAM_STR);
+        $statement->bindParam(':ingredients', implode(',',$_POST['ingreds']), PDO::PARAM_STR);
+        $statement->bindParam(':directions', implode(',',$_POST['directs']), PDO::PARAM_STR);
+
+        $statement->execute();
+
+    }
+
 }
 ?>

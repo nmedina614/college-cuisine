@@ -106,6 +106,35 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
     //Post Array Test:
     print_r($_POST);
 
+    /*
+     * Array ( [recipeName] => Spaghetti [prepTime] => 5 [cookTime] => 15
+     * [servs] => 4 [cals] => 150 [description] => A classic Italian masterpiece that you'll love
+     * [ingreds] => Array ( [0] => 16oz ground beef [1] => meat sauce [2] => water [3] => salt [4]
+     *      => pepper )
+     * [directs] => Array ( [0] => Start boiling water [1] => cook ground beef and add meat sauce to it
+     *      [2] => once finished w/ both, plate pasta then beef on top [3] => Enjoy ) )
+     */
+
+    //Insert Statement
+    /*
+     * INSERT INTO `recipe` (
+     * `recipeid`, `name`, `prepTime`, `cookTime`, `servings`, `cal`
+     * , `descript`, `ingredients`, `directions`, `likes`) VALUES
+     * (NULL, 'Spaghetti', '5', '15', '4', '150',
+     * 'A classic Italian dish that is both cheap to make and delicious.',
+     * '16oz of Ground Beef, 16oz of Pasta Noodles, Salt, Pepper, Water, meatsauce',
+     * 'Boil Water, Put noodles in water, fry ground beef in pan
+     *      until cooked, add meat sauce to beef, once pasta is finished along with the
+     *      beef add pasta to plate followed by beef on top',
+     * '5');
+     */
+
+    if(isset($_POST['submit'])){
+
+        Model::insertRecipe();
+
+    }
+
     // Title to use in template.
     $title = "Submit your Recipe!";
     // List of paths to stylesheets.
