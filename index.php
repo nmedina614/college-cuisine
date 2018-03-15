@@ -102,6 +102,10 @@ $f3->route('GET|POST /login', function($f3) {
 
 // Submit new Recipe
 $f3->route('GET|POST /recipe/new-recipe', function($f3) {
+
+    //Post Array Test:
+    print_r($_POST);
+
     // Title to use in template.
     $title = "Submit your Recipe!";
     // List of paths to stylesheets.
