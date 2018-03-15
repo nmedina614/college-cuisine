@@ -27,14 +27,6 @@ class User
     }
 
     /**
-     *
-     */
-    public function changePassword()
-    {
-
-    }
-
-    /**
      * @return mixed
      */
     public function getUserid()
@@ -64,6 +56,45 @@ class User
     public function getPrivilege()
     {
         return $this->_privilege;
+    }
+
+    /**
+     * TODO
+     *
+     * @param $userid
+     */
+    public function resetPassword()
+    {
+        // Generate a password from random characters
+        $newPassword = Model::generatePassword();
+
+        // Update password in database.
+        Model::updatePassword($this->getUserid(), $newPassword);
+
+        // Information sent in email.
+        $subject = "Password Reset";
+        $message = "Your new password is $newPassword";
+
+        // Send email to user email containing password.
+        Model::sendMessage($this->getEmail(), $subject, $message);
+    }
+
+    /**
+     * TODO
+     *
+     * @param $newPassword
+     */
+    public function changePassword($newPassword)
+    {
+        Model::updatePassword($this->getUserid(), $newPassword);
+
+        // Information sent in email.
+        $subject = "Password Change";
+        $message = "Your password has been updated!
+            If this change was not made by you, contact an administrator!";
+
+        // Send email to user email containing password.
+        Model::sendMessage($this->getEmail(), $subject, $message);
     }
 
 

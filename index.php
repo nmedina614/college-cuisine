@@ -1,6 +1,6 @@
 <?php
 /**
- * User: Aaron Melhaff
+ * Authors: Aaron Melhaff, Nolan Medina
 */
 
 //Begin session
@@ -107,9 +107,6 @@ $f3->route('GET|POST /login', function($f3) {
 
 // Submit new Recipe
 $f3->route('GET|POST /recipe/new-recipe', function($f3) {
-
-    //Post Array Test:
-    print_r($_POST);
 
     /*
      * Array ( [recipeName] => Spaghetti [prepTime] => 5 [cookTime] => 15
@@ -249,7 +246,7 @@ $f3->route('GET /profiles/@user', function($f3, $params) {
 });
 
 // User Profile route
-$f3->route('GET /profiles/@user/reset-password', function($f3, $params) {
+$f3->route('GET /profile/reset-password', function($f3, $params) {
 
     // Reroute if not logged in!
     if(!Model::authorized()) {
@@ -323,6 +320,22 @@ $f3->route('GET /administration', function($f3) {
     $template = new Template();
     echo $template->render('views/_base.html');
 });
+
+$f3->route('GET|POST /administration/reset-password [ajax]', function($f3) {
+
+    $f3->get('AXAJ');
+    if(Model::authorized(1)) {
+        $target = new User($_POST['userid'],
+            $_POST['username'],
+            $_POST['email'],
+            $_POST['privilege']);
+
+        $target->resetPassword();
+        echo 'Sending message to '.$_POST['username'].' at '.$_POST['email'];
+    } else echo "Unauthorized attempt.";
+});
+
+
 
 
 $f3->run();

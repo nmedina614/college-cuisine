@@ -135,31 +135,25 @@ class Model
      * TODO
      *
      * @param $userid
+     * @param $newPassword
      */
-    public static function resetPassword($userid)
+    public static function updatePassword($userid, $newPassword)
     {
-        $newPassword = self::generatePassword();
+        // State query
+        $updateQuery = 'UPDATE user SET password=SHA2(:newPassword, 256) WHERE userid=:userid';
 
-        $updateQuery = 'UPDATE user SET password=:newPassword WHERE userid=SHA2(:userid, 256)';
-
+        // Prepare database query.
         $statement = self::$_dbh->prepare($updateQuery);
 
+        // Bind all parameters.
         $statement->bindParam(':newPassword', $newPassword, PDO::PARAM_STR);
         $statement->bindParam(':userid', $userid, PDO::PARAM_INT);
 
+        // Launch Query.
         $statement->execute();
-
-        // Then get email.
-
-        $emailQuery = "SELECT email FROM user WHERE userid='$userid'";
-
-        $result = self::$_dbh->query($emailQuery);
-
-        $targetEmail = $result->fetch(PDO::FETCH_ASSOC)['email'];
-
-
-        self::sendPassword($targetEmail, $newPassword, 'noreply@amelhaff.greenriverdev.com');
     }
+
+
 
     /**
      * TODO
@@ -168,12 +162,12 @@ class Model
      * @param $password
      * @param $sender
      */
-    public static function sendPassword($recipient, $password, $sender)
+    public static function sendMessage($recipient, $subject, $message)
     {
 
-        $subject = "Password reset";
-        $txt = "Your new email is $password";
-        $headers = "From:$sender";
+        $subject = $subject;
+        $txt = $message;
+        $headers = 'From: college-cuisine <noreply@'.$_SERVER['HTTP_HOST'].'>';
 
         mail($recipient,$subject,$txt,$headers);
     }
@@ -186,7 +180,7 @@ class Model
      * @param int $length
      * @return string
      */
-    public static function generatePassword($length = 8) {
+    public static function generatePassword($length = 64) {
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $count = mb_strlen($chars);
 
@@ -206,6 +200,9 @@ class Model
         return md5( rand(0,1000));
     }
 
+    /**
+     * TODO
+     */
     public static function insertRecipe() {
 
         /*
@@ -256,6 +253,5 @@ class Model
         $statement->execute();
 
     }
-
 }
 ?>
