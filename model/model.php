@@ -85,6 +85,8 @@ class Model
     }
 
     /**
+     * TODO
+     *
      * @param $privilege
      * @return int
      */
@@ -114,6 +116,7 @@ class Model
      * Method that takes a number. If the privilege is
      * greater or equal to the input parameter, then
      * return true. Otherwise, return false. The options are:
+     * -1: Not logged in or active.
      * 0: basic log in.
      * 1: moderator login.
      * 2: admin login.

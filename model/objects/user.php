@@ -66,7 +66,7 @@ class User
     public function resetPassword()
     {
         // Generate a password from random characters
-        $newPassword = Model::generatePassword();
+        $newPassword = Model::generatePassword(32);
 
         // Update password in database.
         Model::updatePassword($this->getUserid(), $newPassword);
