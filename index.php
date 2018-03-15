@@ -39,6 +39,8 @@ $f3->route('GET /', function($f3) {
         'views/_home.html'
     );
 
+    $results = Model::getAllRecipes();
+
     // List of paths to scripts being used.
     $scripts = array();
 
@@ -46,6 +48,7 @@ $f3->route('GET /', function($f3) {
     $f3->set('styles',   $styles);
     $f3->set('includes', $includes);
     $f3->set('scripts',  $scripts);
+    $f3->set('recipes',  $results);
 
     // Display Template
     $template = new Template();
@@ -170,7 +173,10 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 
     // Title to use in template.
-    $title = $params['recipeID'];
+    $title = "College Cuisine";
+
+
+    $result = Model::getRecipe($params['recipeID']);
 
     // List of paths to stylesheets.
     $styles = array(
@@ -194,6 +200,7 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
     $f3->set('styles',   $styles);
     $f3->set('includes', $includes);
     $f3->set('scripts',  $scripts);
+    $f3->set('recipe',  $result);
 
     //SQL to get Recipe Name
 
