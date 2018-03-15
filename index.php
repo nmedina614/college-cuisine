@@ -12,14 +12,17 @@ error_reporting(E_ALL);
 // Require f3
 require_once('vendor/autoload.php');
 
+
+
+// Setup
+$f3 = Base::instance();
+
 // If User object has been stored in session, prepare
 // a unserialized version to be used in functions.
 if(isset($_SESSION['user'])) {
     $GLOBALS['user'] = unserialize($_SESSION['user']);
+    $f3->set('authority', Model::getAuthority($GLOBALS['user']->getPrivilege()));
 }
-
-// Setup
-$f3 = Base::instance();
 $f3->set('DEBUG',3);
 
 // Establish database connection.
@@ -39,6 +42,8 @@ $f3->route('GET /', function($f3) {
         'views/_home.html'
     );
 
+    $results = Model::getAllRecipes();
+
     // List of paths to scripts being used.
     $scripts = array();
 
@@ -46,6 +51,8 @@ $f3->route('GET /', function($f3) {
     $f3->set('styles',   $styles);
     $f3->set('includes', $includes);
     $f3->set('scripts',  $scripts);
+
+    $f3->set('recipes', $results);
 
     // Display Template
     $template = new Template();
@@ -170,7 +177,7 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 
     // Title to use in template.
-    $title = $params['recipeID'];
+    $title = "College Cuisine";
 
     $result = Model::getRecipe($params['recipeID']);
 
@@ -326,11 +333,6 @@ $f3->route('GET /administration', function($f3) {
     // Display Template
     $template = new Template();
     echo $template->render('views/_base.html');
-});
-
-$f3->route('GET|POST /model/script/reset-password.php', function($f3) {
-
-
 });
 
 

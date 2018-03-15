@@ -6,9 +6,14 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="{{@BASE}}/recipe/new-recipe">New Recipe</a>
-            </li>
+
+            <check if="{{ @authority >= 0 }}">
+            <true>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{@BASE}}/recipe/new-recipe">New Recipe</a>
+                </li>
+            </true>
+            </check>
             <li class="nav-item">
                 <a class="nav-link" href="{{@BASE}}/recipe/spaghet">Popular Recipe</a>
             </li>
@@ -23,7 +28,7 @@
                         <div class="dropdown-menu" aria-labelledby="profile-dropdown">
                             <a class="dropdown-item" href="{{ @BASE }}/profiles/{{ $GLOBALS['user']->getUsername() }}">Profile</a>
                             <a class="dropdown-item" href="#">Favorites</a>
-                            <check if="{{ @clearance > 1}}">
+                            <check if="{{ @authority >= 1 }}">
                                 <true>
                                     <a class="dropdown-item" href="{{ @BASE }}/administration">Administration</a>
                                 </true>

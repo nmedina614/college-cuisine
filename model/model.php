@@ -90,9 +90,23 @@ class Model
      */
     public static function getAuthority($privilege)
     {
-        return ($privilege == 'admin')     ? 2 :
-               ($privilege == 'moderator') ? 1 :
-               ($privilege == 'basic')     ? 0 : -1;
+        $authority = -1;
+
+        switch($privilege) {
+            case 'admin':
+                $authority = 2;
+                break;
+            case 'moderator':
+                $authority = 1;
+                break;
+            case 'basic':
+                $authority = 0;
+                break;
+            default:
+                break;
+        }
+
+        return $authority;
 
     }
 
@@ -261,5 +275,46 @@ class Model
         $statement->execute();
 
     }
+
+    /**
+     * TODO
+     */
+    public static function getAllRecipes()
+    {
+        // State query
+        $sql = 'SELECT * FROM recipe order by likes DESC';
+
+        // Prepare database query.
+        $statement = self::$_dbh->prepare($sql);
+
+        // Launch Query.
+        $statement->execute();
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * TODO
+     * @param $id
+     * @return mixed
+     */
+    public static function getRecipe($id)
+    {
+        // State query
+        $sql = 'SELECT * FROM recipe WHERE recipeid = :id';
+
+        // Prepare database query.
+        $statement = self::$_dbh->prepare($sql);
+
+        //Bind Params
+        $statement->bindParam(':id', $id, PDO::PARAM_INT);
+
+
+        // Launch Query.
+        $statement->execute();
+
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
 }
 ?>
