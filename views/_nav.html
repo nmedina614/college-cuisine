@@ -23,7 +23,12 @@
                         <div class="dropdown-menu" aria-labelledby="profile-dropdown">
                             <a class="dropdown-item" href="{{ @BASE }}/profiles/{{ $GLOBALS['user']->getUsername() }}">Profile</a>
                             <a class="dropdown-item" href="#">Favorites</a>
-                            <a class="dropdown-item" href="{{ @BASE }}/administration">Administration</a>
+                            <check if="{{ @clearance > 1}}">
+                                <true>
+                                    <a class="dropdown-item" href="{{ @BASE }}/administration">Administration</a>
+                                </true>
+                            </check>
+
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ @BASE }}/login">Logout</a>
                         </div>
