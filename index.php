@@ -22,6 +22,8 @@ $f3 = Base::instance();
 if(isset($_SESSION['user'])) {
     $GLOBALS['user'] = unserialize($_SESSION['user']);
     $f3->set('authority', Model::getAuthority($GLOBALS['user']->getPrivilege()));
+} else {
+    $f3->set('authority', -1);
 }
 $f3->set('DEBUG',3);
 
