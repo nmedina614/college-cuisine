@@ -39,6 +39,10 @@ $f3->route('GET /', function($f3) {
         'views/_home.html'
     );
 
+    $results = Model::getAllRecipes();
+
+    print_r($results);
+
     // List of paths to scripts being used.
     $scripts = array();
 
@@ -46,6 +50,7 @@ $f3->route('GET /', function($f3) {
     $f3->set('styles',   $styles);
     $f3->set('includes', $includes);
     $f3->set('scripts',  $scripts);
+    $f3->set('recipes',  $results);
 
     // Display Template
     $template = new Template();
