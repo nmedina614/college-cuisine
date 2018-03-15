@@ -271,6 +271,24 @@ class Model
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getRecipe($id)
+    {
+        // State query
+        $sql = 'SELECT * FROM `recipe` WHERE recipeid = :id';
+
+        // Prepare database query.
+        $statement = self::$_dbh->prepare($sql);
+
+        //Bind Params
+        $statement->bindParam(':id', $id, PDO::PARAM_INT);
+
+
+        // Launch Query.
+        $statement->execute();
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 
 ?>

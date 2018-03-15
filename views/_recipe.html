@@ -1,7 +1,7 @@
 <div class="container">
 
     <!-- Portfolio Item Heading -->
-    <h1 class="my-4">{{@title}}</h1>
+    <h1 class="my-4">{{@recipe[0][name]}}</h1>
 
     <!-- Portfolio Item Row -->
     <div class="row">
@@ -14,21 +14,17 @@
             <h3 class="my-3">Details</h3>
             <!-- Small Details added w/ SQL -->
             <ul>
-                <li>Servings: 8</li>
-                <li>Calories per Serving: ----</li>
-                <li>Prep Time: ----</li>
-                <li>Cook Time: ----</li>
-                <li>Total Time: ----</li>
+                <li>Servings: {{@recipe[0][servings]}}</li>
+                <li>Calories per Serving: {{@recipe[0][cal]}}</li>
+                <li>Prep Time: {{@recipe[0][prepTime]}}</li>
+                <li>Cook Time: {{@recipe[0][cookTime]}}</li>
+                <li>Total Time: {{@recipe[0][prepTime] + @recipe[0][cookTime]}}</li>
             </ul>
             <!--Ingredients SQL -->
             <h3 class="my-3">Ingredients</h3>
-            <ul>
-                <li>Barilla Pasta Spaghetti 16oz Box, - 1 serving, -$2</li>
-                <li>Ground Beef 16oz, -EST$5</li>
-                <li>Hunts Pasta Sauce 24oz, -$3</li>
-                <li>Tap Water to cook pasta, -$0</li>
-                <li>Total Price per Serving: $1.25</li>
-            </ul>
+                <!--<ul> -->
+                    <p>{{@recipe[0][ingredients]}}</p>
+                <!--</ul>-->
         </div>
 
     </div>
@@ -39,35 +35,12 @@
 
     <div class="row">
 
-        <div class="col-md-3 col-sm-6 mb-4">
+        <!--<div class="col-md-3 col-sm-6 mb-4">
             <h1>1.</h1>
             <p>Boil the spaghetti</p>
-        </div>
+        </div>-->
 
-        <div class="col-md-3 col-sm-6 mb-4">
-            <h1>2.</h1>
-            <p>Cook the meat</p>
-        </div>
-
-        <div class="col-md-3 col-sm-6 mb-4">
-            <h1>3.</h1>
-            <p>Add the sauce to the meat</p>
-        </div>
-
-        <div class="col-md-3 col-sm-6 mb-4">
-            <h1>4.</h1>
-            <p>Add the meat to the Spaget</p>
-        </div>
-
-        <div class="col-md-3 col-sm-6 mb-4">
-            <h1>5.</h1>
-            <p>Eat the Spaget</p>
-        </div>
-
-        <div class="col-md-3 col-sm-6 mb-4">
-            <h1>4.</h1>
-            <p>Clean the Plate</p>
-        </div>
+        <p> {{@recipe[0][directions]}} </p>
 
     </div>
     <!-- /.row -->
