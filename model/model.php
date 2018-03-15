@@ -69,10 +69,16 @@ class Model
         if(isset($result['username'])) {
 
             // Store user information in Session.
-            $_SESSION['userid'] = $result['userid'];
-            $_SESSION['username'] = $result['username'];
-            $_SESSION['email'] = $result['email'];
-            $_SESSION['privilege'] = $result['privilege'];
+//            $_SESSION['userid'] = $result['userid'];
+//            $_SESSION['username'] = $result['username'];
+//            $_SESSION['email'] = $result['email'];
+//            $_SESSION['privilege'] = $result['privilege'];
+            $_SESSION['user'] = serialize(new User(
+                $result['userid'],
+                $result['username'],
+                $result['email'],
+                $result['privilege']
+            ));
 
             return true;
 
@@ -96,11 +102,11 @@ class Model
     public static function authorized($needed = 0)
     {
 
-        if(empty($_SESSION['username'])) return false;
+        if(empty($GLOBALS['user'])) return false;
 
         $authority =
-            ($_SESSION['privilege'] == 'admin')     ? 2 :
-            ($_SESSION['privilege'] == 'moderator') ? 1 : 0;
+            ($GLOBALS['user']->getPrivilege() == 'admin')     ? 2 :
+            ($GLOBALS['user']->getPrivilege() == 'moderator') ? 1 : 0;
 
         return ($authority >= $needed);
     }
@@ -152,24 +158,24 @@ class Model
         $targetEmail = $result->fetch(PDO::FETCH_ASSOC)['email'];
 
 
-        self::sendPassword($targetEmail, $newPassword, $_SESSION['email']);
+        self::sendPassword($targetEmail, $newPassword, 'noreply@amelhaff.greenriverdev.com');
     }
 
     /**
      * TODO
      *
-     * @param $to
+     * @param $recipient
      * @param $password
      * @param $sender
      */
-    public static function sendPassword($to, $password, $sender)
+    public static function sendPassword($recipient, $password, $sender)
     {
 
         $subject = "Password reset";
         $txt = "Your new email is $password";
-        $headers = "From: $sender";
+        $headers = "From:$sender";
 
-        mail($to,$subject,$txt,$headers);
+        mail($recipient,$subject,$txt,$headers);
     }
 
     /**

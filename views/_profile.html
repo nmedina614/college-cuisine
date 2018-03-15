@@ -5,15 +5,21 @@
                 <h2 class="text-secondary">Profile</h2>
                 <hr>
                 <div class="w-75 float-left">
-                    <p>User ID: {{ $_SESSION['userid'] }}</p>
-                    <p>Username: {{ $_SESSION['username'] }}</p>
-                    <p>Email: {{ $_SESSION['email']}}</p>
-                    <p>Privilege: {{ $_SESSION['privilege'] }}</p>
+                    <p>User ID: {{ $GLOBALS['user']->getUserid() }}</p>
+                    <p>Username: {{ $GLOBALS['user']->getUsername() }}</p>
+                    <p>Email: {{ $GLOBALS['user']->getEmail() }}</p>
+                    <p>Privilege: {{ $GLOBALS['user']->getPrivilege() }}</p>
                 </div>
                 <div class="w-25 float-right">
-                    <button type="button" class="btn btn-sm btn-outline-secondary mb-2" id="btn-change-password">Change Password</button>
+                    <a href="reset-password" class="btn btn-sm btn-outline-secondary mb-2"
+                            id="btn-change-password">
+                        Change Password
+                    </a>
                     <br>
-                    <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-change-email">Change Email</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                            id="btn-change-email">
+                        Change Email
+                    </button>
                 </div>
             </div>
 

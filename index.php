@@ -12,6 +12,12 @@ error_reporting(E_ALL);
 // Require f3
 require_once('vendor/autoload.php');
 
+// If User object has been stored in session, prepare
+// a unserialized version to be used in functions.
+if(isset($_SESSION['user'])) {
+    $GLOBALS['user'] = unserialize($_SESSION['user']);
+}
+
 // Setup
 $f3 = Base::instance();
 $f3->set('DEBUG',3);
@@ -21,7 +27,6 @@ Model::connect();
 
 // Homepage route.
 $f3->route('GET /', function($f3) {
-
     // Title to use in template.
     $title = "College Cuisine";
 
@@ -122,7 +127,7 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
     $f3->set('styles',   $styles);
     $f3->set('includes', $includes);
     $f3->set('scripts',  $scripts);
-    //print_r($_POST);
+    //print_r($_POST); TODO
     if(isset($_POST['submit'])) {
         Model::login($_POST['username'],$_POST['password']);
     }
@@ -205,10 +210,39 @@ $f3->route('GET /profiles/@user', function($f3, $params) {
     $f3->set('includes', $includes);
     $f3->set('scripts',  $scripts);
 
-    // Make login attempt.
-    if(isset($_POST['submit'])) {
-        Model::login($_POST['username'],$_POST['password']);
+    // Display template.
+    $template = new Template();
+    echo $template->render('views/_base.html');
+});
+
+// User Profile route
+$f3->route('GET /profiles/@user/reset-password', function($f3, $params) {
+
+    // Reroute if not logged in!
+    if(!Model::authorized()) {
+        $f3->reroute('/');
     }
+
+    // Title to use in template.
+    $title = $params['user'];
+
+    // List of paths to stylesheets.
+    $styles = array();
+
+    // List of paths for sub-templates being used.
+    $includes = array(
+        'views/_nav.html',
+        'views/_profile.html'
+    );
+
+    // List of paths to scripts being used.
+    $scripts = array();
+
+    // Store page attributes to hive.
+    $f3->set('title',    $title);
+    $f3->set('styles',   $styles);
+    $f3->set('includes', $includes);
+    $f3->set('scripts',  $scripts);
 
     // Display template.
     $template = new Template();

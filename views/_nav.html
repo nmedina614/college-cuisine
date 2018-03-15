@@ -12,18 +12,16 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{@BASE}}/recipe/spaghet">Popular Recipe</a>
             </li>
-
-
         </ul>
         <ul class="navbar-nav ml-auto">
-            <check if="{{ isset($_SESSION['username']) == true }}">
+            <check if="{{ isset($_SESSION['user']) == true }}">
                 <true>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="profile-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ $_SESSION['username'] }}
+                            {{ $GLOBALS['user']->getUsername() }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="profile-dropdown">
-                            <a class="dropdown-item" href="{{ @BASE }}/profiles/{{ $_SESSION['username'] }}">Profile</a>
+                            <a class="dropdown-item" href="{{ @BASE }}/profiles/{{ $GLOBALS['user']->getUsername() }}">Profile</a>
                             <a class="dropdown-item" href="#">Favorites</a>
                             <a class="dropdown-item" href="{{ @BASE }}/administration">Administration</a>
                             <div class="dropdown-divider"></div>
