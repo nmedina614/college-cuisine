@@ -8,13 +8,13 @@
                 <input type="text" class="form-control" id="recipeName" placeholder="Name of Recipe" name="recipeName">
             </div>
             <div class="col-sm-3 pb-3">
-                <label for="prepTime">Prep Time</label>
+                <label for="prepTime">Prep Time (in min)</label>
                 <input type="text" class="form-control" id="prepTime" name="prepTime">
             </div>
             <div class="col-sm-4 pb-3">
 
 
-                <label for="cookTime">Cook Time</label>
+                <label for="cookTime">Cook Time (in min)</label>
                 <input type="text" class="form-control" id="cookTime" name="cookTime">
 
             </div>
@@ -23,13 +23,13 @@
                 <input type="text" class="form-control" id="servings" name="servs">
             </div>
             <div class="col-sm-6 pb-3">
-                <label for="calories">Calories</label>
+                <label for="calories">Calories per serving</label>
                 <input type="text" class="form-control" id="calories" name="cals">
             </div>
 
             <div class="col-md-12 pb-3">
                 <label for="notes">Description</label>
-                <textarea class="form-control" id="notes" name="notes"></textarea>
+                <textarea class="form-control" id="notes" name="description"></textarea>
                 <small class="text-info">
                     Add a small description about your recipe!
                 </small>
@@ -39,23 +39,27 @@
                 <span>Ingredients <button type="button" class="btn btn-sm btn-light" id="btn-add-ingredient">Add <img class="icon-add" src="{{ @BASE }}/assets/images/icons/plus.svg" alt=""></button></span>
                 <div id="ingredient-list">
                     <div class="input-group mb-3 ingredient-item">
-                        <input type="text" class="form-control" placeholder="Ex. 16oz ground beef" class="input-ingredient">
+                        <input type="text" class="form-control" placeholder="Ex. 16oz ground beef" class="input-ingredient" name="ingreds[]">
                         <button class="btn btn-danger btn-ingredient-delete" type="button"><img class="icon-delete" src="{{ @BASE }}/assets/images/icons/close.svg" alt="Remove"></button>
                     </div>
                 </div>
 
             </div>
 
-            <div class="col-sm-6 pb-3">
-                <span>Directions</span>
-                <input type="text" class="form-control" id="directions" name="directs">
-            </div>
+            <div class="col-md-6 pb-3">
+                <span>Direction <button type="button" class="btn btn-sm btn-light" id="btn-add-direct">Add <img class="icon-add" src="{{ @BASE }}/assets/images/icons/plus.svg" alt=""></button></span>
+                <div id="direction-list">
+                      <div class="input-group mb-3 direct-item">
+                                <input type="text" class="form-control" placeholder="Add Directions Here" class="input-directions" name="directs[]">
+                            <button class="btn btn-danger btn-direct-delete" type="button"><img class="icon-delete" src="{{ @BASE }}/assets/images/icons/close.svg" alt="Remove"></button>
+                      </div>
+                </div>
 
         </div>
 
 
 
-        <input class="btn btn-primary" type="submit" value="Submit">
+        <input class="btn btn-primary" type="submit" name="submit">
 
 
 
