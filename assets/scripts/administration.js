@@ -14,9 +14,15 @@ $('button.btn-reset-password').click(function() {
 
        console.log(source);
        $.ajax({
-            method: "POST",
-            url: source + "/administration/reset-password.php",
-            data: generateUser(row)
+           method: "POST",
+           url: source + "/administration/reset-password",
+           data: generateUser(row),
+           success: function(response) {
+               console.log(response);
+           }
+
+
+
        })
 
     }

@@ -1,4 +1,4 @@
-<div class="container bg-dark">
+<div class="container bg-dark" data-source="{{ $_SERVER['HTTP_HOST'] }}{{ @BASE }}">
     <div class="row bg-light mt-2">
         <div class="col bg-white">
             <table id="example" class="table table-sm table-striped" cellspacing="0" width="100%">
@@ -7,19 +7,32 @@
                         <th>UserID</th>
                         <th>Username</th>
                         <th>Email</th>
+                        <th>Privilege</th>
                         <th>Utilities</th>
                     </tr>
                 </thead>
                 <tbody>
                 <repeat group="{{ @rows }}" value="{{ @row }}">
                     <tr>
-                        <td>{{ @row['userid'] }}</td>
-                        <td>{{ @row['username'] }}</td>
-                        <td>{{ @row['email'] }}</td>
+                        <td data-type="userid" data-value="{{ @row['userid'] }}">{{ @row['userid'] }}</td>
+                        <td data-type="username" data-value="{{ @row['username'] }}">{{ @row['username'] }}</td>
+                        <td data-type="email" data-value="{{ @row['email'] }}">{{ @row['email'] }}</td>
+                        <td data-type="privilege" data-value="{{ @row['privilege'] }}">{{ @row['privilege'] }}</td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-warning btn-reset-password" data-toggle="tooltip" data-placement="top" title="Reset Password"><img src="{{ @BASE }}/assets/images/icons/lock-reset.svg" alt="password"></button>
-                            <button type="button" class="btn btn-sm btn-warning btn-change-email" data-toggle="tooltip" data-placement="top" title="Change Email"><img src="{{ @BASE }}/assets/images/icons/email.svg" alt="email"></button>
-                            <button type="button" class="btn btn-sm btn-danger btn-ban-user" data-toggle="tooltip" data-placement="top" title="Disable Account"><img src="{{ @BASE }}/assets/images/icons/close.svg" alt="ban"></button>
+                            <button type="button" class="btn btn-sm btn-warning btn-reset-password"
+                                    data-toggle="tooltip" data-placement="top" title="Reset Password">
+                                <img src="{{ @BASE }}/assets/images/icons/lock-reset.svg" alt="password">
+                            </button>
+
+                            <button type="button" class="btn btn-sm btn-warning btn-change-email"
+                                    data-toggle="tooltip" data-placement="top" title="Change Email">
+                                <img src="{{ @BASE }}/assets/images/icons/email.svg" alt="email">
+                            </button>
+
+                            <button type="button" class="btn btn-sm btn-danger btn-ban-user"
+                                    data-toggle="tooltip" data-placement="top" title="Disable Account">
+                                <img src="{{ @BASE }}/assets/images/icons/close.svg" alt="ban">
+                            </button>
                         </td>
                     </tr>
                 </repeat>
