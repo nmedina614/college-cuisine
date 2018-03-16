@@ -362,5 +362,27 @@ class Model
         } else echo 'Access Denied!';
     }
 
+    /**
+     * TODO
+     */
+    public static function likeRecipe($id)
+    {
+        // State query
+        $sql = 'UPDATE `recipe` SET `likes` = `likes` + 1 WHERE `recipe`.`recipeid` = :id';
+
+        // Prepare database query.
+        $statement = self::$_dbh->prepare($sql);
+
+        //Bind Params
+        $statement->bindParam(':id', $id, PDO::PARAM_INT);
+
+
+        // Launch Query.
+        $statement->execute();
+
+    }
+
+
+
 }
 ?>

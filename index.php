@@ -151,7 +151,6 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 
     }
 
-
     // Title to use in template.
     $title = "Submit your Recipe!";
     // List of paths to stylesheets.
@@ -183,6 +182,12 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 
 // Submit Recipe route
 $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
+
+    if(isset($_POST['submit'])) {
+
+        Model::likeRecipe($params['recipeID']);
+
+    }
 
     // Title to use in template.
     $title = "College Cuisine";
@@ -216,8 +221,6 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
     $f3->set('ingredients', explode(",", $result['ingredients']));
     $f3->set('directions', explode(",", $result['directions']));
     $f3->set('image',  $result['image']);
-
-
 
 
     //SQL to get Recipe Name
