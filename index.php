@@ -142,9 +142,15 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 
     if(isset($_POST['submit'])){
 
-        Model::insertRecipe();
+        include("model/scripts/upload.php");
+
+        $path = $target_file;
+
+        Model::insertRecipe($path);
+
 
     }
+
 
     // Title to use in template.
     $title = "Submit your Recipe!";

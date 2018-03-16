@@ -227,7 +227,7 @@ class Model
     /**
      * TODO
      */
-    public static function insertRecipe() {
+    public static function insertRecipe($path) {
 
         /*
      * INSERT INTO `recipe` (
@@ -244,9 +244,9 @@ class Model
         // Prepare a select to check if db contains queried params.
         $sql = 'INSERT INTO `recipe` (`name`, `prepTime`, 
                 `cookTime`, `servings`, `cal`, `descript`, `ingredients`, 
-                `directions`, `likes`) VALUES (:recipeName, :prepTime, 
+                `directions`, `likes`, `image`) VALUES (:recipeName, :prepTime, 
                 :cookTime, :servings, :cal, :descript, :ingredients,
-                :directions, \'0\')';
+                :directions, \'0\', :image)';
 
         $statement = self::$_dbh->prepare($sql);
 
@@ -273,6 +273,7 @@ class Model
         $statement->bindParam(':descript', $_POST['description'], PDO::PARAM_STR);
         $statement->bindParam(':ingredients', implode(',',$_POST['ingreds']), PDO::PARAM_STR);
         $statement->bindParam(':directions', implode(',',$_POST['directs']), PDO::PARAM_STR);
+        $statement->bindParam(':image', $path, PDO::PARAM_STR);
 
         $statement->execute();
 
