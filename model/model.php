@@ -69,18 +69,12 @@ class Model
         if(isset($result['username'])) {
 
             // Store user information in Session.
-            $_SESSION['user'] =
-                ($result['privilege'] == 'moderator' || $result['privilege'] == 'admin') ? serialize(new Moderator(
-                    $result['userid'],
-                    $result['username'],
-                    $result['email'],
-                    $result['privilege'])) :
-                                                        serialize(new User(
-                    $result['userid'],
-                    $result['username'],
-                    $result['email'],
-                    $result['privilege']));
-
+            $_SESSION['user'] = serialize(new User(
+                $result['userid'],
+                $result['username'],
+                $result['email'],
+                $result['privilege']
+            ));
 
             return true;
 
@@ -146,7 +140,7 @@ class Model
     public static function viewUsers()
     {
         if(self::authorized(1)) {
-            $sql = 'SELECT * FROM user WHERE NOT privilege=\'admin\'';
+            $sql = 'SELECT * FROM user WHERE privilege=\'basic\'';
 
             // Prepare query
             $statement = self::$_dbh->prepare($sql);
@@ -223,6 +217,13 @@ class Model
         return $result;
     }
 
+    /**
+     * TODO
+     */
+    public static function verifyHash() {
+        // Generate random 32 character hash and assign it to a local variable.
+        return md5( rand(0,1000));
+    }
 
     /**
      * TODO
@@ -321,24 +322,25 @@ class Model
 
     /**
      * TODO
-     *
-     * @param $targetID
-     * @param $sourceID
      */
-    public static function reassignUser($targetID, $newPrivilege)
+    public static function likeRecipe($id)
     {
-        if(self::authorized(1)) {
-            $sql = 'UPDATE user SET privilege=:privilege WHERE userid=:userid';
+        // State query
+        $sql = 'UPDATE `recipe` SET `likes` = `likes` + 1 WHERE `recipe`.`recipeid` = :id';
 
-            $statement = self::$_dbh->prepare($sql);
+        // Prepare database query.
+        $statement = self::$_dbh->prepare($sql);
 
-            $statement->bindParam(':privilege', $newPrivilege, PDO::PARAM_INT);
-            $statement->bindParam(':userid', $targetID, PDO::PARAM_INT);
+        //Bind Params
+        $statement->bindParam(':id', $id, PDO::PARAM_INT);
 
-            $statement->execute();
 
-        } else echo 'Access Denied!';
+        // Launch Query.
+        $statement->execute();
+
     }
+
+
 
 }
 ?>

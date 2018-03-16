@@ -3,8 +3,17 @@
     <!-- Portfolio Item Heading -->
     <h1 class="my-4">{{@recipe[name]}}</h1>
 
+
+    <form method="post" action="{{@BASE}}/recipe/{{@recipe['recipeid']}}">
+
+        <button class="btn btn-primary" type="submit" name="submit">Like!</button>
+
+    </form>
+
+
     <!-- Portfolio Item Row -->
     <div class="row">
+
 
         <div class="col-md-8">
             <img class="img-fluid" src="../{{@image}}" alt="testing">

@@ -184,6 +184,12 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 // Submit Recipe route
 $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 
+    if(isset($_POST['submit'])) {
+
+        Model::likeRecipe($params['recipeID']);
+
+    }
+
     // Title to use in template.
     $title = "College Cuisine";
 
