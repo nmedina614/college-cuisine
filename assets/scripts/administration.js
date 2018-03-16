@@ -19,12 +19,151 @@ $('button.btn-reset-password').click(function() {
            data: generateUser(row),
            dataType: 'text',
            success: function(response) {
-               console.log(response);
+               //alert(response);
            }
 
+       });
+
+    }
 
 
-       })
+});
+
+
+$('button.btn-ban-user').click(function() {
+    const source = $('[data-source]').data('source');
+
+    let confirmed = confirm("Are you sure you want to ban this user?");
+    if(confirmed) {
+        console.log(this);
+        let row = $(this).parent().parent();
+
+        console.log(source);
+        $.ajax({
+            method: "POST",
+            url: "//" + source + "/model/scripts/deactivate-user.php",
+            data: generateUser(row),
+            dataType: 'text',
+            success: function(response) {
+                //alert(response);
+                location.reload();
+            }
+
+
+
+        });
+
+    }
+
+
+});
+
+$('button.btn-delete-user').click(function() {
+    const source = $('[data-source]').data('source');
+
+    let confirmed = confirm("Are you sure you want to delete this user?");
+    if(confirmed) {
+        console.log(this);
+        let row = $(this).parent().parent();
+
+        console.log(source);
+        $.ajax({
+            method: "POST",
+            url: "//" + source + "/model/scripts/delete-user.php",
+            data: generateUser(row),
+            dataType: 'text',
+            success: function(response) {
+                //alert(response);
+                location.reload();
+            }
+
+
+
+        });
+
+    }
+
+
+});
+
+$('button.btn-reinstate-user').click(function() {
+    const source = $('[data-source]').data('source');
+
+    let confirmed = confirm("Are you sure you want to reinstate this user?");
+    if(confirmed) {
+        console.log(this);
+        let row = $(this).parent().parent();
+
+        console.log(source);
+        $.ajax({
+            method: "POST",
+            url: "//" + source + "/model/scripts/reinstate-user.php",
+            data: generateUser(row),
+            dataType: 'text',
+            success: function(response) {
+                //alert(response);
+                location.reload();
+            }
+
+
+
+        });
+
+    }
+
+
+});
+
+$('button.btn-promote-user').click(function() {
+    const source = $('[data-source]').data('source');
+
+    let confirmed = confirm("Are you sure you want to promote this user?");
+    if(confirmed) {
+        console.log(this);
+        let row = $(this).parent().parent();
+
+        console.log(source);
+        $.ajax({
+            method: "POST",
+            url: "//" + source + "/model/scripts/promote-user.php",
+            data: generateUser(row),
+            dataType: 'text',
+            success: function(response) {
+                //alert(response);
+                location.reload();
+            }
+
+
+
+        });
+
+    }
+
+
+});
+
+$('button.btn-demote-user').click(function() {
+    const source = $('[data-source]').data('source');
+
+    let confirmed = confirm("Are you sure you want to demote this user?");
+    if(confirmed) {
+        console.log(this);
+        let row = $(this).parent().parent();
+
+        console.log(source);
+        $.ajax({
+            method: "POST",
+            url: "//" + source + "/model/scripts/demote-user.php",
+            data: generateUser(row),
+            dataType: 'text',
+            success: function(response) {
+                //alert(response);
+                location.reload();
+            }
+
+
+
+        });
 
     }
 

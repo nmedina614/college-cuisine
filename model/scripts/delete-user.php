@@ -27,10 +27,12 @@ if(isset($_SESSION['user'])) {
             $_POST['privilege']
         );
 
-        if(Model::getAuthority($GLOBALS['user']->getPrivilege()) > $userObject->getPrivilege()) {
-            $GLOBALS['user']->demote($userObject->getUserid());
-            echo 'Demoting user '.$userObject->getUsername();
+        if(Model::getAuthority($GLOBALS['user']->getPrivilege()) > $userObject->getPrivilege() ||
+            Model::authorized(2)) {
+            $GLOBALS['user']->delete($userObject->getUserid());
+            echo 'Deleting user '.$userObject->getUsername();
         } else echo "You do not have the authority to perform this action.";
+
 
     }
 

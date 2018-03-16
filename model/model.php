@@ -70,12 +70,15 @@ class Model
 
             // Store user information in Session.
             $_SESSION['user'] =
-                ($result['privilege'] == 'moderator' || $result['privilege'] == 'admin') ? serialize(new Moderator(
+                ($result['privilege'] == 'moderator' ||
+                 $result['privilege'] == 'admin') ?
+                    serialize(new Moderator(
                     $result['userid'],
                     $result['username'],
                     $result['email'],
                     $result['privilege'])) :
-                                                        serialize(new User(
+
+                    serialize(new User(
                     $result['userid'],
                     $result['username'],
                     $result['email'],
@@ -182,6 +185,26 @@ class Model
         $statement->execute();
     }
 
+    /**
+     * TODO
+     *
+     * @param $userid
+     */
+    public static function deleteUser($userid)
+    {
+        // State query
+        $updateQuery = 'DELETE FROM `user` WHERE userid=:userid';
+
+        // Prepare database query.
+        $statement = self::$_dbh->prepare($updateQuery);
+
+        // Bind all parameters.
+        $statement->bindParam(':userid', $userid, PDO::PARAM_INT);
+
+        // Launch Query.
+        $statement->execute();
+    }
+
 
 
 
@@ -227,7 +250,7 @@ class Model
     /**
      * TODO
      */
-    public static function insertRecipe($path) {
+    public static function insertRecipe() {
 
         /*
      * INSERT INTO `recipe` (
@@ -244,9 +267,9 @@ class Model
         // Prepare a select to check if db contains queried params.
         $sql = 'INSERT INTO `recipe` (`name`, `prepTime`, 
                 `cookTime`, `servings`, `cal`, `descript`, `ingredients`, 
-                `directions`, `likes`, `image`) VALUES (:recipeName, :prepTime, 
+                `directions`, `likes`) VALUES (:recipeName, :prepTime, 
                 :cookTime, :servings, :cal, :descript, :ingredients,
-                :directions, \'0\', :image)';
+                :directions, \'0\')';
 
         $statement = self::$_dbh->prepare($sql);
 
@@ -273,7 +296,6 @@ class Model
         $statement->bindParam(':descript', $_POST['description'], PDO::PARAM_STR);
         $statement->bindParam(':ingredients', implode(',',$_POST['ingreds']), PDO::PARAM_STR);
         $statement->bindParam(':directions', implode(',',$_POST['directs']), PDO::PARAM_STR);
-        $statement->bindParam(':image', $path, PDO::PARAM_STR);
 
         $statement->execute();
 

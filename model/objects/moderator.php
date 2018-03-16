@@ -48,4 +48,14 @@ class Moderator extends User
         Model::reassignUser($userid, 'basic');
     }
 
+    /**
+     * TODO
+     *
+     * @param $userid
+     */
+    public function delete($userid)
+    {
+        Model::deleteUser($userid);
+    }
+
 }
