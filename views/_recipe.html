@@ -7,11 +7,12 @@
     <div class="row">
 
         <div class="col-md-8">
-            <img class="img-fluid" src="https://www.thesun.co.uk/wp-content/uploads/2016/08/image217.jpg?w=960" alt="">
+            <img class="img-fluid" src="../{{@image}}" alt="testing">
         </div>
 
         <div class="col-md-4">
             <h3 class="my-3">Details</h3>
+            <p>{{@recipe['descript']}}</p>
             <!-- Small Details added w/ SQL -->
             <ul>
                 <li>Servings: {{@recipe[servings]}}</li>

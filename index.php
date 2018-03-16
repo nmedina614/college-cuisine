@@ -215,7 +215,10 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
     $f3->set('recipe',  $result);
     $f3->set('ingredients', explode(",", $result['ingredients']));
     $f3->set('directions', explode(",", $result['directions']));
-    
+    $f3->set('image',  $result['image']);
+
+
+
 
     //SQL to get Recipe Name
 
