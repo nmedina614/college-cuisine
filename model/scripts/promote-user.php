@@ -18,8 +18,7 @@ Model::connect();
 // a non-serialized version to be used in functions.
 if(isset($_SESSION['user'])) {
     $GLOBALS['user'] = unserialize($_SESSION['user']);
-    if($GLOBALS['user']->getPrivilege() == "moderator" ||
-       $GLOBALS['user']->getPrivilege() == "admin") {
+    if($GLOBALS['user']->getPrivilege() == "admin") {
 
         $userObject = new User(
             $_POST['userid'],
@@ -28,10 +27,10 @@ if(isset($_SESSION['user'])) {
             $_POST['privilege']
         );
 
-        if(Model::getAuthority($GLOBALS['user']->getPrivilege()) > $userObject->getPrivilege() ||
-            Model::authorized(2)) {
-            $userObject->resetPassword();
-            echo 'Password reset for '.$userObject->getUsername();
+        // Must have higher authority to change authority.
+        if(Model::getAuthority($GLOBALS['user']->getPrivilege()) > $userObject->getPrivilege()) {
+            $GLOBALS['user']->promote($userObject->getUserid());
+            echo 'Promoting user '.$userObject->getUsername();
         } else echo "You do not have the authority to perform this action.";
 
     }

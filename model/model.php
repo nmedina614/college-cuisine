@@ -69,12 +69,18 @@ class Model
         if(isset($result['username'])) {
 
             // Store user information in Session.
-            $_SESSION['user'] = serialize(new User(
-                $result['userid'],
-                $result['username'],
-                $result['email'],
-                $result['privilege']
-            ));
+            $_SESSION['user'] =
+                ($result['privilege'] == 'moderator' || $result['privilege'] == 'admin') ? serialize(new Moderator(
+                    $result['userid'],
+                    $result['username'],
+                    $result['email'],
+                    $result['privilege'])) :
+                                                        serialize(new User(
+                    $result['userid'],
+                    $result['username'],
+                    $result['email'],
+                    $result['privilege']));
+
 
             return true;
 
@@ -140,7 +146,7 @@ class Model
     public static function viewUsers()
     {
         if(self::authorized(1)) {
-            $sql = 'SELECT * FROM user WHERE privilege=\'basic\'';
+            $sql = 'SELECT * FROM user WHERE NOT privilege=\'admin\'';
 
             // Prepare query
             $statement = self::$_dbh->prepare($sql);
@@ -217,13 +223,6 @@ class Model
         return $result;
     }
 
-    /**
-     * TODO
-     */
-    public static function verifyHash() {
-        // Generate random 32 character hash and assign it to a local variable.
-        return md5( rand(0,1000));
-    }
 
     /**
      * TODO
@@ -317,6 +316,27 @@ class Model
         $statement->execute();
 
         return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * TODO
+     *
+     * @param $targetID
+     * @param $sourceID
+     */
+    public static function reassignUser($targetID, $newPrivilege)
+    {
+        if(self::authorized(1)) {
+            $sql = 'UPDATE user SET privilege=:privilege WHERE userid=:userid';
+
+            $statement = self::$_dbh->prepare($sql);
+
+            $statement->bindParam(':privilege', $newPrivilege, PDO::PARAM_INT);
+            $statement->bindParam(':userid', $targetID, PDO::PARAM_INT);
+
+            $statement->execute();
+
+        } else echo 'Access Denied!';
     }
 
 }

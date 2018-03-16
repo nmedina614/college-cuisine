@@ -28,12 +28,10 @@ if(isset($_SESSION['user'])) {
             $_POST['privilege']
         );
 
-        if(Model::getAuthority($GLOBALS['user']->getPrivilege()) > $userObject->getPrivilege() ||
-            Model::authorized(2)) {
-            $userObject->resetPassword();
-            echo 'Password reset for '.$userObject->getUsername();
+        if(Model::getAuthority($GLOBALS['user']->getPrivilege()) > $userObject->getPrivilege()) {
+            $GLOBALS['user']->reinstate($userObject->getUserid());
+            echo 'Reinstating user '.$userObject->getUsername();
         } else echo "You do not have the authority to perform this action.";
-
     }
 
 

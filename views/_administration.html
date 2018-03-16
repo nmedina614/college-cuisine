@@ -19,20 +19,66 @@
                         <td data-type="email" data-value="{{ @row['email'] }}">{{ @row['email'] }}</td>
                         <td data-type="privilege" data-value="{{ @row['privilege'] }}">{{ @row['privilege'] }}</td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-warning btn-reset-password"
+
+                            <!-- Promote/Reinstate User -->
+                            <check if="{{ @row['privilege'] != 'deactivated' }}">
+                                <true>
+                                    <check if="{{ @row['privilege'] == 'moderator' }}">
+                                        <true>
+                                            <button type="button" class="btn btn-sm btn-disabled"
+                                                    data-toggle="tooltip" data-placement="top" title="Disabled">
+                                                <img src="{{ @BASE }}/assets/images/icons/verified.svg" alt="Disabled">
+                                            </button>
+                                        </true>
+                                        <false>
+                                            <button type="button" class="btn btn-sm btn-dark btn-promote-user"
+                                                    data-toggle="tooltip" data-placement="top" title="Promote User">
+                                                <img src="{{ @BASE }}/assets/images/icons/verified.svg" alt="promote">
+                                            </button>
+                                        </false>
+                                    </check>
+                                </true>
+                                <false>
+                                    <button type="button" class="btn btn-sm btn-dark btn-reinstate-user"
+                                            data-toggle="tooltip" data-placement="top" title="Reinstate User">
+                                        <img src="{{ @BASE }}/assets/images/icons/plus.svg" alt="Reinstate">
+                                    </button>
+                                </false>
+                            </check>
+
+
+                            <!-- Reset password -->
+                            <button type="button" class="btn btn-sm btn-dark btn-reset-password"
                                     data-toggle="tooltip" data-placement="top" title="Reset Password">
                                 <img src="{{ @BASE }}/assets/images/icons/lock-reset.svg" alt="password">
                             </button>
 
-                            <button type="button" class="btn btn-sm btn-warning btn-change-email"
-                                    data-toggle="tooltip" data-placement="top" title="Change Email">
-                                <img src="{{ @BASE }}/assets/images/icons/email.svg" alt="email">
-                            </button>
+                            <!-- Ban/Delete User -->
+                            <check if="{{ @row['privilege'] == 'deactivated'}}">
+                                <true>
+                                    <button type="button" class="btn btn-sm btn-danger btn-delete-user"
+                                            data-toggle="tooltip" data-placement="top" title="Delete Account">
+                                        <img src="{{ @BASE }}/assets/images/icons/delete.svg" alt="delete">
+                                    </button>
+                                </true>
+                                <false>
+                                    <check if="{{ @row['privilege'] == 'basic'}}">
+                                        <true>
+                                            <button type="button" class="btn btn-sm btn-dark btn-ban-user"
+                                                    data-toggle="tooltip" data-placement="top" title="Disable Account">
+                                                <img src="{{ @BASE }}/assets/images/icons/close.svg" alt="ban">
+                                            </button>
+                                        </true>
+                                        <false>
+                                            <button type="button" class="btn btn-sm btn-dark btn-demote-user"
+                                                    data-toggle="tooltip" data-placement="top" title="Demote Account">
+                                                <img src="{{ @BASE }}/assets/images/icons/minus.svg" alt="demote">
+                                            </button>
+                                        </false>
+                                    </check>
+                                </false>
+                            </check>
 
-                            <button type="button" class="btn btn-sm btn-danger btn-ban-user"
-                                    data-toggle="tooltip" data-placement="top" title="Disable Account">
-                                <img src="{{ @BASE }}/assets/images/icons/close.svg" alt="ban">
-                            </button>
                         </td>
                     </tr>
                 </repeat>

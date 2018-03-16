@@ -14,7 +14,6 @@ class User
      * User constructor. TODO
      * @param $userid
      * @param $username
-     * @param $password
      * @param $email
      * @param $privilege
      */
