@@ -1,5 +1,10 @@
 <div class="container">
-    <form method="post" action="new-recipe" enctype="multipart/form-data">
+    <div class="alert alert-danger d-none" id="invalid-alert">
+        <ul id="invalid-list">
+
+        </ul>
+    </div>
+    <form method="post" action="new-recipe" enctype="multipart/form-data" id="recipeForm">
 
         <!-- form complex example -->
         <div class="form-row mt-4">
@@ -64,7 +69,7 @@
                 </div>
 
                 <div class="col-md-12 pb-3">
-                    <button class="btn btn-primary mx-clear" type="submit" name="submit">Submit</button>
+                    <button class="btn btn-primary mx-clear" type="submit" name="submit" id="submit">Submit</button>
                 </div>
             </div>
 
