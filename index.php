@@ -117,6 +117,7 @@ $f3->route('GET|POST /login', function($f3) {
 // Submit new Recipe
 $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 
+    //Post Array
     /*
      * Array ( [recipeName] => Spaghetti [prepTime] => 5 [cookTime] => 15
      * [servs] => 4 [cals] => 150 [description] => A classic Italian masterpiece that you'll love
@@ -142,8 +143,7 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 
     if(isset($_POST['submit'])){
 
-        //echo 'test';
-
+        //Set Fat Free variables for Sticky
         $f3->set('recipeName', $_POST['recipeName']);
         $f3->set('prepTime', $_POST['prepTime']);
         $f3->set('cookTime', $_POST['cookTime']);
@@ -153,18 +153,25 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
         $f3->set('ingreds', $_POST['ingreds']);
         $f3->set('directs', $_POST['directs']);
 
+        //See if there is any validation errors for inputs
         $errors = Model::validateRecipe();
 
-        //echo sizeof($errors);
-
+        //If no validation errors...
         if($errors == null) {
 
+            $target_file = "";
+
+            //Upload image file to server
             include("model/scripts/upload.php");
 
+            //get the path for the file
             $path = $target_file;
 
+            //upload the recipe to the database
             Model::insertRecipe($path);
 
+
+            //Reroute to homepage
             $f3->reroute('/');
 
         }
@@ -204,8 +211,11 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 // Submit Recipe route
 $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 
+
+    //See if user clicked like!
     if(isset($_POST['submit'])) {
 
+        //Like the Recipe!
         Model::likeRecipe($params['recipeID']);
 
     }
@@ -213,6 +223,8 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
     // Title to use in template.
     $title = "College Cuisine";
 
+
+    //Gets the Recipe from the database.
     $result = Model::getRecipe($params['recipeID']);
 
     // List of paths to stylesheets.
@@ -233,6 +245,8 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
         //$f3->get('BASE').'/assets/scripts/SCRIPT-NAME.js
     );
 
+
+    //Sets Fat Free variables to use in HTML
     $f3->set('title',    $title);
     $f3->set('styles',   $styles);
     $f3->set('includes', $includes);
