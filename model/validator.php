@@ -11,64 +11,55 @@ class Validator
     /**
      * TODO
      *
-     * @param $input
+     * @returns
      */
-    public static function validUsername($input)
+    public static function validateRegistration($username, $password1, $password2, $email)
     {
-        return preg_match('/^[a-zA-Z0-9]{5,}$/', $input);
-    }
+        $invalid = array();
 
-    /**
-     * TODO
-     *
-     * @param $input
-     * @param $detailed
-     */
-    public static function validPassword($input, $detailed)
-    {
-        $passwordErrors = array();
-        if(!empty($input)) {
 
-            if (strlen($_POST["password"]) <= '32') {
+        if(preg_match("/^[0-9a-zA-Z_]{8,}$/", $_POST["user"])) {
+            $invalid[] = 'User must be bigger that 8 chars and contain only digits, letters and underscore';
+        }
 
-                $passwordErrors[] = "Your Password Must Contain At Least 32 Characters!";
+        if(!empty($password1)) {
 
-            } elseif(!preg_match("#[0-9]+#",$input)) {
+            if(strlen($password1) <= '8') {
 
-                $passwordErrors[] = "Your Password Must Contain At Least 1 Number!";
+                $invalid[] = "Your Password Must Contain At Least 8 Characters!";
+            }
+            if(!preg_match("#[0-9]+#",$password1)) {
 
-            } elseif(!preg_match("#[A-Z]+#",$input)) {
+                $invalid[] = "Your Password Must Contain At Least 1 Number!";
+            }
+            if(!preg_match("#[A-Z]+#",$password1)) {
 
-                $passwordErrors[] = "Your Password Must Contain At Least 1 Capital Letter!";
+                $invalid[] = "Your Password Must Contain At Least 1 Capital Letter!";
+            }
+            if(!preg_match("#[a-z]+#",$password1)) {
 
-            } elseif(!preg_match("#[a-z]+#",$input)) {
+                $invalid[] = "Your Password Must Contain At Least 1 Lowercase Letter!";
+            }
+            if(!preg_match("/[$@$!%*#?&]+/",$password1)) {
 
-                $passwordErrors[] = "Your Password Must Contain At Least 1 Lowercase Letter!";
-
-            } elseif(!preg_match("/[$@$!%*#?&]+/",$input)) {
-
-                $passwordErrors[] = "Your Password Must Contain At Least 1 special character!";
+                $invalid[] = "Your Password Must Contain At Least 1 special character!";
 
             }
         }
-        elseif(!empty($_POST["password"])) {
-            $passwordErrors[] = "Please Check You've Entered Or Confirmed Your Password!";
+        elseif($password1 != $password2) {
+            $invalid[] = "Passwords do not match!";
         } else {
-            $passwordErrors[] = "Please enter password";
+            $invalid[] = "Please enter password";
         }
 
-        // If user wants a more detailed response, return array or problems.
-        return ($detailed) ? $passwordErrors :
-            (count($passwordErrors) > 0);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $invalid[] = "Invalid email address!";
+        }
+
+        return $invalid;
     }
 
-    /**
-     * TODO
-     *
-     * @param $input
-     */
-    public static function validEmail($input)
-    {
-        return preg_match('/^((https?|ftp)\://((\[?(\d{1,3}\.){3}\d{1,3}\]?)|(([-a-zA-Z0-9]+\.)+[a-zA-Z]{2,4}))(\:\d+)?(/[-a-zA-Z0-9._?,\'+&amp;%$#=~\\]+)*/?)$/', $input);
+    public static function test_input($data) {
+        return $data;
     }
 }

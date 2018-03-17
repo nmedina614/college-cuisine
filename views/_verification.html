@@ -1,0 +1,23 @@
+<div class="container">
+    <div class="row">
+        <div class="col col-sm-6 offset-sm-3 bg-light p-2 mt-2 rounded">
+            <div class="bg-white p-4 rounded">
+                <h3 class="text-secondary">Verification</h3>
+                <hr>
+                <check if="{{ @result }}">
+                    <true>
+                        <div class="alert alert-success">
+                            <p>Account verified!</p>
+                        </div>
+                    </true>
+                    <false>
+                        <div class="alert alert-danger">
+                            <p>Verification failed!</p>
+                        </div>
+                    </false>
+                </check>
+
+            </div>
+        </div>
+    </div>
+</div>

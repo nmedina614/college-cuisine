@@ -388,8 +388,14 @@ $f3->route('GET /administration', function($f3) {
 
 $f3->route('GET|POST /registration', function($f3) {
 
-    if(isset($_POST['submit'])) {
+    $included = 'views/_registration.html';
 
+    if(isset($_POST['submit'])) {
+        $invalid = Model::register();
+        if(count($invalid) == 0) {
+            $included = 'views/_confirmation.html';
+        }
+        $f3->set('invalid', $invalid);
     }
 
     // Title to use in template.
@@ -401,7 +407,7 @@ $f3->route('GET|POST /registration', function($f3) {
     // List of paths for sub-templates being used.
     $includes = array(
         'views/_nav.html',
-        'views/_registration.html'
+        $included
     );
 
     // List of paths to scripts being used.
@@ -418,7 +424,42 @@ $f3->route('GET|POST /registration', function($f3) {
     echo $template->render('views/_base.html');
 });
 
+// Route for link for verifying new users.
+$f3->route('GET /registration/verify/@hash', function($f3, $params) {
+    if(isset($_SESSION['user']) && $GLOBALS['user']->getPrivilege() >= 0) {
+        $f3->reroute('/');
+    }
+
+    $hash = $params['hash'];
+
+    $result = Model::verifyAccount($hash);
 
 
+    // Title to use in template.
+    $title = "Verify Account";
+
+    // List of paths to stylesheets.
+    $styles = array();
+
+    // List of paths for sub-templates being used.
+    $includes = array(
+        'views/_nav.html',
+        'views/_verification.html'
+    );
+
+    // List of paths to scripts being used.
+    $scripts = array();
+
+    // Store page attributes to hive.
+    $f3->set('result',   $result);
+    $f3->set('title',    $title);
+    $f3->set('styles',   $styles);
+    $f3->set('includes', $includes);
+    $f3->set('scripts',  $scripts);
+
+    // Display Template
+    $template = new Template();
+    echo $template->render('views/_base.html');
+});
 
 $f3->run();

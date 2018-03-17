@@ -385,14 +385,15 @@ class Model
 
     public static function register() {
 
+        $username  = $_POST['username'];
+        $password1 = $_POST['password1'];
+        $password2 = $_POST['password2'];
+        $email     = $_POST['email'];
 
 
-        $valid = ($_POST['password1']  !=  $_POST['password2'])          &&
-                 (Validator::validUsername($_POST['username'], false))   &&
-                 (Validator::validEmail(   $_POST['email']))             &&
-                 (Validator::validPassword($_POST['password1']));
+        $invalid = Validator::validateRegistration($username, $password1, $password2, $email);
 
-        if($valid) {
+        if(count($invalid) == 0) {
             // State query
             $sql = 'INSERT INTO `user`(`username`, `password`, `email`, `privilege`) 
                     VALUES (:username, :password, :email, \'deactivated\')';
@@ -401,19 +402,170 @@ class Model
             $statement = self::$_dbh->prepare($sql);
 
             //Bind Params
-            $statement->bindParam(':username', $_POST['username'], PDO::PARAM_STR);
-            $statement->bindParam(':password', $_POST['password'], PDO::PARAM_STR);
-            $statement->bindParam(':email',    $_POST['email'],    PDO::PARAM_STR);
+            $statement->bindParam(':username', $username, PDO::PARAM_STR);
+            $statement->bindParam(':password', hash('sha256', $password1), PDO::PARAM_STR);
+            $statement->bindParam(':email',    $email,    PDO::PARAM_STR);
 
             // Launch Query.
-            $statement->execute();
+            $success = $statement->execute();
+
+            if($success) {
+                $userid = self::$_dbh->lastInsertId();
+                $hash = hash('sha256', self::generatePassword());
+
+                $verifyInsert = 'INSERT INTO `verification`(`userid`, `verifyCode`) VALUES (:userid, :hash)';
+
+                $stmt = self::$_dbh->prepare($verifyInsert);
+                $stmt->bindParam(':userid', $userid, PDO::PARAM_INT);
+                $stmt->bindParam(':hash',   $hash,   PDO::PARAM_STR);
+
+                $result = $stmt->execute();
+
+                if($result) {
+                    self::sendMessage($email, 'Account verification',
+                        'Thank you for signing up with College-Cuisine!
+                        in order to activate your account, please open the following link. 
+                        ' . ($_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']) ."/verify/$hash"
+                    );
+                }
+            } else {
+                $invalid[] = 'Username or email is already in use.';
+            }
         }
+
+        return $invalid;
 
 
 
     }
 
+    /**
+     * TODO
+     *
+     * @param $hash
+     */
+    public static function verifyAccount($hash)
+    {
+        $sql = 'SELECT userid FROM verification WHERE verifyCode=:hash';
+
+        $searchQuery = self::$_dbh->prepare($sql);
+
+        $searchQuery->bindParam(':hash', $hash, PDO::PARAM_STR);
+
+        $searchQuery->execute();
+
+        $result = $searchQuery->fetch();
+
+        // If result comes back positive, then activate account.
+        if(isset($result['userid'])) {
+                $userid = $result['userid'];
+                $sql2 = 'UPDATE user SET privilege=\'basic\' WHERE userid=:userid';
+
+                $updateQuery = self::$_dbh->prepare($sql2);
+
+                $updateQuery->bindParam(':userid', $userid, PDO::PARAM_INT);
+
+                $success = $updateQuery->execute();
+
+                $sql3 = 'DELETE FROM verification WHERE verifyCode=:hash';
+
+                $deleteQuery = self::$_dbh->prepare($sql3);
+
+                $deleteQuery->bindParam(':hash', $hash, PDO::PARAM_STR);
+
+                return $deleteQuery->execute();
+
+        } else return false;
+    }
+
+    /**
+     * TODO
+     */
+    public static function validateRecipe()
+    {
+        $errors = array('test');
+        //echo sizeof($errors);
+        foreach($_POST as $value){
+            $valid = self::notEmpty($value);
+            if(!$valid){
+                array_push($errors, $value);
+            }
+        }
+        $valid = self::isAlphaNum($_POST['recipeName']);
+        if(!$valid){
+            array_push($errors, $_POST['recipeName']);
+        }
+        $valid = self::validateNum($_POST['prepTime']);
+        if(!$valid){
+            array_push($errors, $_POST['prepTime']);
+        }
+        $valid = self::validateNum($_POST['cookTime']);
+        if(!$valid){
+            array_push($errors, $_POST['cookTime']);
+        }
+        $valid = self::validateNum($_POST['servs']);
+        if(!$valid){
+            array_push($errors, $_POST['servs']);
+        }
+        $valid = self::validateNum($_POST['cals']);
+        if(!$valid){
+            array_push($errors, $_POST['cals']);
+        }
+        $valid = self::validateTinyText($_POST['description']);
+        if(!$valid){
+            array_push($errors, $_POST['description']);
+        }
+        foreach($_POST['ingreds'] as $value){
+            $valid = self::validateTinyText($value);
+            if(!$valid){
+                array_push($errors, $value);
+            }
+        }
+        foreach($_POST['directs'] as $value){
+            $valid = self::validateTinyText($value);
+            if(!$valid){
+                array_push($errors, $value);
+            }
+        }
+        //echo sizeof($errors);
+        if(sizeof($errors)==1){
+            $errors = null;
+        }
+        return $errors;
+    }
+
+    /**
+     * @param $data - value to test Validation function
+     */
+    public static function notEmpty($data)
+    {
+        if ($_POST['recipeName'] == "") {
+            return false;
+        }
+        return true;
+    }
+    public static function isAlphaNum($data)
+    {
+        if (!ctype_alnum($data)) {
+            return false;
+        }
+        return true;
+    }
+    public static function validateNum($num)
+    {
+        if (!is_numeric($num)) {
+            return false;
+        }
+        return true;
+    }
+    public static function validateTinyText($data)
+    {
+        if(!(strlen($data) < 255)){
+            return false;
+        }
+        return true;
+    }
+
 
 
 }
-?>
