@@ -23,7 +23,7 @@ class Model
      */
     public static function connect()
     {
-        if(!isset($_dbh)) {
+        if (!isset($_dbh)) {
             try {
                 // instantiate pdo object.
                 self::$_dbh = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
@@ -46,7 +46,7 @@ class Model
         session_reset();
 
         // Don't bother querying db if params are empty.
-        if(empty($_POST['username']) || empty($_POST['password'])) {
+        if (empty($_POST['username']) || empty($_POST['password'])) {
             return false;
         }
 
@@ -66,29 +66,28 @@ class Model
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
         // If it isn't empty, store pulled info into session.
-        if(isset($result['username'])) {
+        if (isset($result['username'])) {
 
             // Store user information in Session.
             $_SESSION['user'] =
                 ($result['privilege'] == 'moderator' ||
-                 $result['privilege'] == 'admin') ?
+                    $result['privilege'] == 'admin') ?
                     serialize(new Moderator(
-                    $result['userid'],
-                    $result['username'],
-                    $result['email'],
-                    $result['privilege'])) :
+                        $result['userid'],
+                        $result['username'],
+                        $result['email'],
+                        $result['privilege'])) :
 
                     serialize(new User(
-                    $result['userid'],
-                    $result['username'],
-                    $result['email'],
-                    $result['privilege']));
+                        $result['userid'],
+                        $result['username'],
+                        $result['email'],
+                        $result['privilege']));
 
 
             return true;
 
         } else return false;
-
 
 
     }
@@ -103,7 +102,7 @@ class Model
     {
         $authority = -1;
 
-        switch($privilege) {
+        switch ($privilege) {
             case 'admin':
                 $authority = 2;
                 break;
@@ -136,7 +135,7 @@ class Model
     public static function authorized($needed = 0)
     {
 
-        if(empty($GLOBALS['user'])) return false;
+        if (empty($GLOBALS['user'])) return false;
 
         $authority = self::getAuthority($GLOBALS['user']->getPrivilege());
 
@@ -148,7 +147,7 @@ class Model
      */
     public static function viewUsers()
     {
-        if(self::authorized(1)) {
+        if (self::authorized(1)) {
             $sql = 'SELECT * FROM user WHERE NOT privilege=\'admin\'';
 
             // Prepare query
@@ -206,9 +205,6 @@ class Model
     }
 
 
-
-
-
     /**
      * TODO
      *
@@ -221,9 +217,9 @@ class Model
 
         $subject = $subject;
         $txt = $message;
-        $headers = 'From: college-cuisine <noreply@'.$_SERVER['HTTP_HOST'].'>';
+        $headers = 'From: college-cuisine <noreply@' . $_SERVER['HTTP_HOST'] . '>';
 
-        mail($recipient,$subject,$txt,$headers);
+        mail($recipient, $subject, $txt, $headers);
     }
 
     /**
@@ -234,7 +230,8 @@ class Model
      * @param int $length
      * @return string
      */
-    public static function generatePassword($length = 64) {
+    public static function generatePassword($length = 64)
+    {
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $count = mb_strlen($chars);
 
@@ -250,7 +247,8 @@ class Model
     /**
      * TODO
      */
-    public static function insertRecipe($path) {
+    public static function insertRecipe($path)
+    {
 
         /*
      * INSERT INTO `recipe` (
@@ -286,7 +284,7 @@ class Model
 
         echo $_POST['recipeName'];
 
-        echo  implode(',',$_POST['ingreds']);
+        echo implode(',', $_POST['ingreds']);
 
         $statement->bindParam(':recipeName', $_POST['recipeName'], PDO::PARAM_STR);
         $statement->bindParam(':prepTime', $_POST['prepTime'], PDO::PARAM_STR);
@@ -294,8 +292,8 @@ class Model
         $statement->bindParam(':servings', $_POST['servs'], PDO::PARAM_STR);
         $statement->bindParam(':cal', $_POST['cals'], PDO::PARAM_STR);
         $statement->bindParam(':descript', $_POST['description'], PDO::PARAM_STR);
-        $statement->bindParam(':ingredients', implode(',',$_POST['ingreds']), PDO::PARAM_STR);
-        $statement->bindParam(':directions', implode(',',$_POST['directs']), PDO::PARAM_STR);
+        $statement->bindParam(':ingredients', implode(',', $_POST['ingreds']), PDO::PARAM_STR);
+        $statement->bindParam(':directions', implode(',', $_POST['directs']), PDO::PARAM_STR);
         $statement->bindParam(':image', $path, PDO::PARAM_STR);
 
         $statement->execute();
@@ -350,7 +348,7 @@ class Model
      */
     public static function reassignUser($targetID, $newPrivilege)
     {
-        if(self::authorized(1)) {
+        if (self::authorized(1)) {
             $sql = 'UPDATE user SET privilege=:privilege WHERE userid=:userid';
 
             $statement = self::$_dbh->prepare($sql);
@@ -383,6 +381,166 @@ class Model
 
     }
 
+
+    /**
+     * TODO
+     */
+    public static function validateRecipe()
+    {
+
+
+        $errors = array('test');
+
+        //echo sizeof($errors);
+
+        foreach($_POST as $value){
+
+            $valid = self::notEmpty($value);
+
+            if(!$valid){
+                array_push($errors, $value);
+            }
+
+        }
+
+        $valid = self::isAlphaNum($_POST['recipeName']);
+
+        if(!$valid){
+
+            array_push($errors, $_POST['recipeName']);
+
+        }
+
+        $valid = self::validateNum($_POST['prepTime']);
+
+        if(!$valid){
+
+            array_push($errors, $_POST['prepTime']);
+
+        }
+
+        $valid = self::validateNum($_POST['cookTime']);
+
+        if(!$valid){
+
+            array_push($errors, $_POST['cookTime']);
+
+        }
+
+        $valid = self::validateNum($_POST['servs']);
+
+        if(!$valid){
+
+            array_push($errors, $_POST['servs']);
+
+        }
+
+        $valid = self::validateNum($_POST['cals']);
+
+
+        if(!$valid){
+
+            array_push($errors, $_POST['cals']);
+
+        }
+
+        $valid = self::validateTinyText($_POST['description']);
+
+        if(!$valid){
+
+            array_push($errors, $_POST['description']);
+
+        }
+
+        foreach($_POST['ingreds'] as $value){
+
+            $valid = self::validateTinyText($value);
+
+            if(!$valid){
+
+                array_push($errors, $value);
+
+            }
+
+        }
+
+        foreach($_POST['directs'] as $value){
+
+            $valid = self::validateTinyText($value);
+
+            if(!$valid){
+
+                array_push($errors, $value);
+
+            }
+
+        }
+
+        //echo sizeof($errors);
+
+
+
+        if(sizeof($errors)==1){
+
+            $errors = null;
+
+        }
+
+        return $errors;
+
+    }
+
+
+    /**
+     * @param $data - value to test Validation function
+     */
+    public static function notEmpty($data)
+    {
+
+        if ($_POST['recipeName'] == "") {
+
+            return false;
+
+        }
+
+        return true;
+
+    }
+
+    public static function isAlphaNum($data)
+    {
+        if (!ctype_alnum($data)) {
+
+            return false;
+
+        }
+
+        return true;
+
+    }
+
+    public static function validateNum($num)
+    {
+
+        if (!is_numeric($num)) {
+
+            return false;
+
+        }
+
+        return true;
+
+    }
+
+    public static function validateTinyText($data)
+    {
+        if(!(strlen($data) < 255)){
+
+            array_push($errors, $data);
+
+        }
+
+    }
 
 
 }

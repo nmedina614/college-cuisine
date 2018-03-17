@@ -142,12 +142,32 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 
     if(isset($_POST['submit'])){
 
-        include("model/scripts/upload.php");
+        //echo 'test';
 
-        $path = $target_file;
+        $f3->set('recipeName', $_POST['recipeName']);
+        $f3->set('prepTime', $_POST['prepTime']);
+        $f3->set('cookTime', $_POST['cookTime']);
+        $f3->set('servings', $_POST['servs']);
+        $f3->set('calories', $_POST['cals']);
+        $f3->set('description', $_POST['description']);
+        $f3->set('ingreds', $_POST['ingreds']);
+        $f3->set('directs', $_POST['directs']);
 
-        Model::insertRecipe($path);
+        $errors = Model::validateRecipe();
 
+        //echo sizeof($errors);
+
+        if($errors == null) {
+
+            include("model/scripts/upload.php");
+
+            $path = $target_file;
+
+            Model::insertRecipe($path);
+
+            $f3->reroute('/');
+
+        }
 
     }
 
@@ -166,7 +186,7 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
     $scripts = array(
         // If you need a script do
         $f3->get('BASE').'/assets/scripts/recipe-scripts.js',
-        $f3->get('BASE').'/assets/scripts/validate-recipe.js'
+        //$f3->get('BASE').'/assets/scripts/validate-recipe.js'
     );
     $f3->set('title',    $title);
     $f3->set('styles',   $styles);
