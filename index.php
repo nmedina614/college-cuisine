@@ -223,9 +223,15 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 
         //see if the user is logged in and has enough privilege
         if(isset($_SESSION['user']) && $GLOBALS['user']->getPrivilege() >= 0) {
-            //Like the Recipe!
-            Model::likeRecipe($params['recipeID']);
-            $f3->set('success', "You have liked this recipe!");
+
+
+            if(!Model::validateLike($GLOBALS['user']->getUserid(), $params['recipeID'])){
+                $f3->set('error', "You have already liked this recipe!");
+            } else {
+                //Like the Recipe!
+                Model::likeRecipe($params['recipeID'], $GLOBALS['user']->getUserid());
+                $f3->set('success', "You have liked this recipe!");
+            }
         } else {
             $f3->set('error', "You must be logged in to like a recipe!");
         }
@@ -234,9 +240,14 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 
         //see if the user is logged in and has enough privilege
         if(isset($_SESSION['user']) && $GLOBALS['user']->getPrivilege() >= 0) {
-            //dislike the Recipe!
-            Model::dislikeRecipe($params['recipeID']);
-            $f3->set('success', "You have disliked this recipe!");
+
+            if(!Model::validateDislike($GLOBALS['user']->getUserid(), $params['recipeID'])){
+                $f3->set('error', "You have already disliked this recipe!");
+            } else {
+                //dislike the Recipe!
+                Model::dislikeRecipe($params['recipeID'], $GLOBALS['user']->getUserid());
+                $f3->set('success', "You have disliked this recipe!");
+            }
         } else {
             $f3->set('error', "You must be logged in to dislike a recipe!");
         }

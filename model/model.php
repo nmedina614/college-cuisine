@@ -366,16 +366,44 @@ class Model
     /**
      * TODO
      */
-    public static function likeRecipe($id)
+    public static function likeRecipe($recipeID, $userID)
     {
         // State query
-        $sql = 'UPDATE `recipe` SET `likes` = `likes` + 1 WHERE `recipe`.`recipeid` = :id';
+        $sql = 'UPDATE `recipe` SET `likes` = `likes` + 1 WHERE `recipe`.`recipeid` = :recipeID';
 
         // Prepare database query.
         $statement = self::$_dbh->prepare($sql);
 
         //Bind Params
-        $statement->bindParam(':id', $id, PDO::PARAM_INT);
+        $statement->bindParam(':recipeID', $recipeID, PDO::PARAM_INT);
+
+
+        // Launch Query.
+        $statement->execute();
+
+        // State query
+        $sql = 'INSERT INTO `liked-recipes` (`userID`, `recipeID`) VALUES (:userID, :recipeID)';
+
+        // Prepare database query.
+        $statement = self::$_dbh->prepare($sql);
+
+        //Bind Params
+        $statement->bindParam(':recipeID', $recipeID, PDO::PARAM_INT);
+        $statement->bindParam(':userID', $userID, PDO::PARAM_INT);
+
+
+        // Launch Query.
+        $statement->execute();
+
+        // State query
+        $sql = 'DELETE FROM `dislike-recipe` WHERE userID=:userID AND recipeID=:recipeID';
+
+        // Prepare database query.
+        $statement = self::$_dbh->prepare($sql);
+
+        //Bind Params
+        $statement->bindParam(':userID', $userID, PDO::PARAM_INT);
+        $statement->bindParam(':recipeID', $recipeID, PDO::PARAM_INT);
 
 
         // Launch Query.
@@ -386,16 +414,44 @@ class Model
     /**
      * TODO
      */
-    public static function dislikeRecipe($id)
+    public static function dislikeRecipe($recipeID, $userID)
     {
         // State query
-        $sql = 'UPDATE `recipe` SET `likes` = `likes` - 1 WHERE `recipe`.`recipeid` = :id';
+        $sql = 'UPDATE `recipe` SET `likes` = `likes` - 1 WHERE `recipe`.`recipeid` = :recipeID';
 
         // Prepare database query.
         $statement = self::$_dbh->prepare($sql);
 
         //Bind Params
-        $statement->bindParam(':id', $id, PDO::PARAM_INT);
+        $statement->bindParam(':recipeID', $recipeID, PDO::PARAM_INT);
+
+
+        // Launch Query.
+        $statement->execute();
+
+        // State query
+        $sql = 'INSERT INTO `dislike-recipe` (`userID`, `recipeID`) VALUES (:userID, :recipeID)';
+
+        // Prepare database query.
+        $statement = self::$_dbh->prepare($sql);
+
+        //Bind Params
+        $statement->bindParam(':recipeID', $recipeID, PDO::PARAM_INT);
+        $statement->bindParam(':userID', $userID, PDO::PARAM_INT);
+
+
+        // Launch Query.
+        $statement->execute();
+
+        // State query
+        $sql = 'DELETE FROM `liked-recipes` WHERE userID=:userID AND recipeID=:recipeID';
+
+        // Prepare database query.
+        $statement = self::$_dbh->prepare($sql);
+
+        //Bind Params
+        $statement->bindParam(':userID', $userID, PDO::PARAM_INT);
+        $statement->bindParam(':recipeID', $recipeID, PDO::PARAM_INT);
 
 
         // Launch Query.
@@ -596,5 +652,52 @@ class Model
     }
 
 
+    public static function validateLike($userID, $recipeID){
+
+
+
+        $sql = 'SELECT * FROM `liked-recipes` WHERE userID = :userID AND recipeID = :recipeID';
+
+        $searchQuery = self::$_dbh->prepare($sql);
+
+        $searchQuery->bindParam(':userID', $userID, PDO::PARAM_STR);
+        $searchQuery->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+
+        $searchQuery->execute();
+
+        $result = $searchQuery->rowCount();
+
+        if($result > 0){
+
+            return false;
+
+        } else {
+            return true;
+        }
+
+    }
+
+    public static function validateDislike($userID, $recipeID){
+
+        $sql = 'SELECT * FROM `dislike-recipe` WHERE userID = :userID AND recipeID = :recipeID';
+
+        $searchQuery = self::$_dbh->prepare($sql);
+
+        $searchQuery->bindParam(':userID', $userID, PDO::PARAM_STR);
+        $searchQuery->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+
+        $searchQuery->execute();
+
+        $result = $searchQuery->rowCount();
+
+        if($result > 0){
+
+            return false;
+
+        } else {
+            return true;
+        }
+
+    }
 
 }
