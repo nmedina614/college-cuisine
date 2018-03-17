@@ -499,19 +499,19 @@ class Model
         }
         $valid = self::validateNum($_POST['prepTime']);
         if(!$valid){
-            array_push($errors, "There is an error in the Prep Time, please keep it a number");
+            array_push($errors, "There is an error in the Prep Time, please keep it a positive number");
         }
         $valid = self::validateNum($_POST['cookTime']);
         if(!$valid){
-            array_push($errors, "There is an error in the Cook Time, please keep it a number");
+            array_push($errors, "There is an error in the Cook Time, please keep it a positive number");
         }
         $valid = self::validateNum($_POST['servs']);
         if(!$valid){
-            array_push($errors, "There is an error in the Servings, please keep it a number");
+            array_push($errors, "There is an error in the Servings, please keep it a positive number");
         }
         $valid = self::validateNum($_POST['cals']);
         if(!$valid){
-            array_push($errors, "There is an error in the Calories, please keep it a number");
+            array_push($errors, "There is an error in the Calories, please keep it a positive number");
         }
         $valid = self::validateTinyText($_POST['description']);
         if(!$valid){
