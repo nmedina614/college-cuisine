@@ -44,20 +44,20 @@
 
                 <true>
 
-                    <repeat group="{{ @ingreds }}" value="{{ @ingredient }}">
 
-                        <div class="col-md-6 pb-3">
-                            <span>Ingredients <button type="button" class="btn btn-sm btn-light" id="btn-add-ingredient">Add <img class="icon-add" src="{{ @BASE }}/assets/images/icons/plus.svg" alt=""></button></span>
-                            <div id="ingredient-list">
-                                <div class="input-group mb-3 ingredient-item">
-                                    <input type="text" class="form-control" placeholder="Ex. 16oz ground beef" class="input-ingredient" name="ingreds[]">
+                    <div class="col-md-6 pb-3">
+                        <span>Ingredients <button type="button" class="btn btn-sm btn-light" id="btn-add-ingredient">Add <img class="icon-add" src="{{ @BASE }}/assets/images/icons/plus.svg" alt=""></button></span>
+
+                        <div id="ingredient-list">
+
+                            <repeat group="{{ @ingreds }}" value="{{ @ingredient }}">
+                               <div class="input-group mb-3 ingredient-item">
+                                    <input type="text" class="form-control" placeholder="Ex. 16oz ground beef" class="input-ingredient" name="ingreds[]" value="{{@ingredient}}">
                                     <button class="btn btn-danger btn-ingredient-delete" type="button"><img class="icon-delete" src="{{ @BASE }}/assets/images/icons/close.svg" alt="Remove"></button>
                                 </div>
-                            </div>
-
+                            </repeat>
                         </div>
-
-                    </repeat>
+                     </div>
 
                 </true>
 
@@ -71,7 +71,6 @@
                                 <button class="btn btn-danger btn-ingredient-delete" type="button"><img class="icon-delete" src="{{ @BASE }}/assets/images/icons/close.svg" alt="Remove"></button>
                             </div>
                         </div>
-
                     </div>
 
                 </false>
@@ -79,24 +78,22 @@
             </check>
 
 
-            <check if="isset({{@ingreds}})">
+            <check if="isset({{@directs}})">
 
                 <true>
 
-                    <repeat group="{{ @directs }}" value="{{ @directions }}">
+                    <div class="col-md-6 pb-3">
+                        <span>Direction <button type="button" class="btn btn-sm btn-light" id="btn-add-direct">Add <img class="icon-add" src="{{ @BASE }}/assets/images/icons/plus.svg" alt=""></button></span>
+                        <div id="direction-list">
 
-                        <div class="col-md-6 pb-3">
-                            <span>Direction <button type="button" class="btn btn-sm btn-light" id="btn-add-direct">Add <img class="icon-add" src="{{ @BASE }}/assets/images/icons/plus.svg" alt=""></button></span>
-                            <div id="direction-list">
+                            <repeat group="{{ @directs }}" value="{{ @directions }}">
                                 <div class="input-group mb-3 direct-item">
-                                    <input type="text" class="form-control" placeholder="Add Directions Here" class="input-directions" name="directs[]" value="directions">
+                                    <input type="text" class="form-control" placeholder="Add Directions Here" class="input-directions" name="directs[]" value="{{@directions}}">
                                     <button class="btn btn-danger btn-direct-delete" type="button"><img class="icon-delete" src="{{ @BASE }}/assets/images/icons/close.svg" alt="Remove"></button>
                                 </div>
-                            </div>
-
+                            </repeat>
                         </div>
-
-                    </repeat>
+                    </div>
 
                 </true>
 
