@@ -174,6 +174,10 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
             //Reroute to homepage
             $f3->reroute('/');
 
+        } else {
+
+            $f3->set('errors', $errors);
+
         }
 
     }

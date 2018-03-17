@@ -483,7 +483,7 @@ class Model
      */
     public static function validateRecipe()
     {
-        $errors = array('test');
+        $errors = array('There was an error in your submit recipe form:');
         //echo sizeof($errors);
         foreach($_POST as $value){
             $valid = self::notEmpty($value);
@@ -493,38 +493,42 @@ class Model
         }
         $valid = self::isAlphaNum($_POST['recipeName']);
         if(!$valid){
-            array_push($errors, $_POST['recipeName']);
+            array_push($errors, "There is an error in the Recipe Name, Please keep the name alphanumeric");
         }
         $valid = self::validateNum($_POST['prepTime']);
         if(!$valid){
-            array_push($errors, $_POST['prepTime']);
+            array_push($errors, "There is an error in the Prep Time, please keep it a number");
         }
         $valid = self::validateNum($_POST['cookTime']);
         if(!$valid){
-            array_push($errors, $_POST['cookTime']);
+            array_push($errors, "There is an error in the Cook Time, please keep it a number");
         }
         $valid = self::validateNum($_POST['servs']);
         if(!$valid){
-            array_push($errors, $_POST['servs']);
+            array_push($errors, "There is an error in the Servings, please keep it a number");
         }
         $valid = self::validateNum($_POST['cals']);
         if(!$valid){
-            array_push($errors, $_POST['cals']);
+            array_push($errors, "There is an error in the Calories, please keep it a number");
         }
         $valid = self::validateTinyText($_POST['description']);
         if(!$valid){
-            array_push($errors, $_POST['description']);
+            array_push($errors, "There is an error in the description, please try to make it under 255 characters");
         }
         foreach($_POST['ingreds'] as $value){
             $valid = self::validateTinyText($value);
             if(!$valid){
-                array_push($errors, $value);
+                array_push($errors, "There is an error in the Ingredients, 
+                please keep under 255 characters per ingredient");
+                break;
             }
         }
         foreach($_POST['directs'] as $value){
             $valid = self::validateTinyText($value);
             if(!$valid){
-                array_push($errors, $value);
+                array_push($errors, "There is an error in the directions, 
+                please keep under 255 characters per direction");
+                break;
             }
         }
         //echo sizeof($errors);
