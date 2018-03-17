@@ -487,8 +487,10 @@ class Model
         //echo sizeof($errors);
         foreach($_POST as $value){
             $valid = self::notEmpty($value);
+            $error = "You are missing data, Please make sure all fields are not empty";
             if(!$valid){
-                array_push($errors, $value);
+                array_push($errors, $error);
+                break;
             }
         }
         $valid = self::isAlphaNum($_POST['recipeName']);
