@@ -552,7 +552,7 @@ class Model
     }
     public static function isAlphaNum($data)
     {
-        if (!ctype_alnum($data)) {
+        if (!preg_match('/^[a-z\d\-_\s]+$/i', $data)) {
             return false;
         }
         return true;
@@ -560,6 +560,9 @@ class Model
     public static function validateNum($num)
     {
         if (!is_numeric($num)) {
+            return false;
+        }
+        if($num < 0){
             return false;
         }
         return true;
