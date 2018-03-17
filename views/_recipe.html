@@ -1,12 +1,37 @@
 <div class="container">
 
+    <div <check if="isset(@error)">
+         <true>class="alert alert-danger" id="invalid-alert"</true>
+         </check>
+        <check if="isset(@success)">
+            <true>class="alert alert-success" id="success-alert"</true>
+        </check>
+    >
+
+    <ul id="invalid-list">
+
+        <check if="isset(@error)">
+            <true>
+                <li>{{@error}}</li>
+            </true>
+        </check>
+        <check if="isset(@success)">
+            <true>
+                <li>{{@success}}</li>
+            </true>
+        </check>
+
+    </ul>
+</div>
+
     <!-- Portfolio Item Heading -->
     <h1 class="my-4">{{@recipe[name]}}</h1>
 
 
     <form method="post" action="{{@BASE}}/recipe/{{@recipe['recipeid']}}">
 
-        <button class="btn btn-primary" type="submit" name="submit">Like!</button>
+        <button class="btn btn-primary" type="submit" name="like">Like!</button>
+        <button class="btn btn-primary" type="submit" name="dislike">Dislike!</button>
 
     </form>
 

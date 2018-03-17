@@ -383,6 +383,26 @@ class Model
 
     }
 
+    /**
+     * TODO
+     */
+    public static function dislikeRecipe($id)
+    {
+        // State query
+        $sql = 'UPDATE `recipe` SET `likes` = `likes` - 1 WHERE `recipe`.`recipeid` = :id';
+
+        // Prepare database query.
+        $statement = self::$_dbh->prepare($sql);
+
+        //Bind Params
+        $statement->bindParam(':id', $id, PDO::PARAM_INT);
+
+
+        // Launch Query.
+        $statement->execute();
+
+    }
+
     public static function register() {
 
         $username  = $_POST['username'];
