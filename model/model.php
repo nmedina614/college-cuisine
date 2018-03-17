@@ -387,19 +387,15 @@ class Model
 
 
 
-        $valid = true;
-        if($_POST['password1'] != $_POST['password2']) {
-            $valid = false;
-        }
-
-        $valid = (Validator::validUsername($_POST['username'])) &&
-                 (Validator::validEmail($_POST['email'])) &&
+        $valid = ($_POST['password1']  !=  $_POST['password2'])          &&
+                 (Validator::validUsername($_POST['username'], false))   &&
+                 (Validator::validEmail(   $_POST['email']))             &&
                  (Validator::validPassword($_POST['password1']));
 
         if($valid) {
             // State query
             $sql = 'INSERT INTO `user`(`username`, `password`, `email`, `privilege`) 
-                VALUES (:username, :password, :email, \'deactivated\')';
+                    VALUES (:username, :password, :email, \'deactivated\')';
 
             // Prepare database query.
             $statement = self::$_dbh->prepare($sql);

@@ -22,8 +22,9 @@ class Validator
      * TODO
      *
      * @param $input
+     * @param $detailed
      */
-    public static function validPassword($input)
+    public static function validPassword($input, $detailed)
     {
         $passwordErrors = array();
         if(!empty($input)) {
@@ -56,7 +57,9 @@ class Validator
             $passwordErrors[] = "Please enter password";
         }
 
-        return $passwordErrors;
+        // If user wants a more detailed response, return array or problems.
+        return ($detailed) ? $passwordErrors :
+            (count($passwordErrors) > 0);
     }
 
     /**
