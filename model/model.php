@@ -536,9 +536,11 @@ class Model
     {
         if(!(strlen($data) < 255)){
 
-            array_push($errors, $data);
+            return false;
 
         }
+
+        return true;
 
     }
 

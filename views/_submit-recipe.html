@@ -10,55 +10,111 @@
         <div class="form-row mt-4">
             <div class="col-sm-5 pb-3">
                 <label for="recipeName">Recipe name</label>
-                <input type="text" class="form-control" id="recipeName" placeholder="Name of Recipe" name="recipeName">
+                <input type="text" class="form-control" id="recipeName" placeholder="Name of Recipe" name="recipeName" value="{{@recipeName}}">
             </div>
             <div class="col-sm-3 pb-3">
                 <label for="prepTime">Prep Time (in min)</label>
-                <input type="text" class="form-control" id="prepTime" name="prepTime">
+                <input type="text" class="form-control" id="prepTime" name="prepTime" value="{{@prepTime}}">
             </div>
             <div class="col-sm-4 pb-3">
 
 
                 <label for="cookTime">Cook Time (in min)</label>
-                <input type="text" class="form-control" id="cookTime" name="cookTime">
+                <input type="text" class="form-control" id="cookTime" name="cookTime" value="{{@cookTime}}">
 
             </div>
             <div class="col-sm-6 pb-3">
                 <label for="servings">Servings</label>
-                <input type="text" class="form-control" id="servings" name="servs">
+                <input type="text" class="form-control" id="servings" name="servs" value="{{@servings}}">
             </div>
             <div class="col-sm-6 pb-3">
                 <label for="calories">Calories per serving</label>
-                <input type="text" class="form-control" id="calories" name="cals">
+                <input type="text" class="form-control" id="calories" name="cals" value="{{@calories}}">
             </div>
 
             <div class="col-md-12 pb-3">
                 <label for="notes">Description</label>
-                <textarea class="form-control" id="notes" name="description"></textarea>
+                <textarea class="form-control" id="notes" name="description">{{@description}}</textarea>
                 <small class="text-info">
                     Add a small description about your recipe!
                 </small>
             </div>
 
-            <div class="col-md-6 pb-3">
-                <span>Ingredients <button type="button" class="btn btn-sm btn-light" id="btn-add-ingredient">Add <img class="icon-add" src="{{ @BASE }}/assets/images/icons/plus.svg" alt=""></button></span>
-                <div id="ingredient-list">
-                    <div class="input-group mb-3 ingredient-item">
-                        <input type="text" class="form-control" placeholder="Ex. 16oz ground beef" class="input-ingredient" name="ingreds[]">
-                        <button class="btn btn-danger btn-ingredient-delete" type="button"><img class="icon-delete" src="{{ @BASE }}/assets/images/icons/close.svg" alt="Remove"></button>
+            <check if="isset(@ingreds)">
+
+                <true>
+
+                    <repeat group="{{ @ingreds }}" value="{{ @ingredient }}">
+
+                        <div class="col-md-6 pb-3">
+                            <span>Ingredients <button type="button" class="btn btn-sm btn-light" id="btn-add-ingredient">Add <img class="icon-add" src="{{ @BASE }}/assets/images/icons/plus.svg" alt=""></button></span>
+                            <div id="ingredient-list">
+                                <div class="input-group mb-3 ingredient-item">
+                                    <input type="text" class="form-control" placeholder="Ex. 16oz ground beef" class="input-ingredient" name="ingreds[]">
+                                    <button class="btn btn-danger btn-ingredient-delete" type="button"><img class="icon-delete" src="{{ @BASE }}/assets/images/icons/close.svg" alt="Remove"></button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </repeat>
+
+                </true>
+
+                <false>
+
+                    <div class="col-md-6 pb-3">
+                        <span>Ingredients <button type="button" class="btn btn-sm btn-light" id="btn-add-ingredient">Add <img class="icon-add" src="{{ @BASE }}/assets/images/icons/plus.svg" alt=""></button></span>
+                        <div id="ingredient-list">
+                            <div class="input-group mb-3 ingredient-item">
+                                <input type="text" class="form-control" placeholder="Ex. 16oz ground beef" class="input-ingredient" name="ingreds[]" value="{{@ingredient}}">
+                                <button class="btn btn-danger btn-ingredient-delete" type="button"><img class="icon-delete" src="{{ @BASE }}/assets/images/icons/close.svg" alt="Remove"></button>
+                            </div>
+                        </div>
+
                     </div>
-                </div>
 
-            </div>
+                </false>
 
-            <div class="col-md-6 pb-3">
-                <span>Direction <button type="button" class="btn btn-sm btn-light" id="btn-add-direct">Add <img class="icon-add" src="{{ @BASE }}/assets/images/icons/plus.svg" alt=""></button></span>
-                <div id="direction-list">
-                      <div class="input-group mb-3 direct-item">
+            </check>
+
+
+            <check if="isset({{@ingreds}})">
+
+                <true>
+
+                    <repeat group="{{ @directs }}" value="{{ @directions }}">
+
+                        <div class="col-md-6 pb-3">
+                            <span>Direction <button type="button" class="btn btn-sm btn-light" id="btn-add-direct">Add <img class="icon-add" src="{{ @BASE }}/assets/images/icons/plus.svg" alt=""></button></span>
+                            <div id="direction-list">
+                                <div class="input-group mb-3 direct-item">
+                                    <input type="text" class="form-control" placeholder="Add Directions Here" class="input-directions" name="directs[]" value="directions">
+                                    <button class="btn btn-danger btn-direct-delete" type="button"><img class="icon-delete" src="{{ @BASE }}/assets/images/icons/close.svg" alt="Remove"></button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </repeat>
+
+                </true>
+
+                <false>
+
+                    <div class="col-md-6 pb-3">
+                        <span>Direction <button type="button" class="btn btn-sm btn-light" id="btn-add-direct">Add <img class="icon-add" src="{{ @BASE }}/assets/images/icons/plus.svg" alt=""></button></span>
+                        <div id="direction-list">
+                            <div class="input-group mb-3 direct-item">
                                 <input type="text" class="form-control" placeholder="Add Directions Here" class="input-directions" name="directs[]">
-                            <button class="btn btn-danger btn-direct-delete" type="button"><img class="icon-delete" src="{{ @BASE }}/assets/images/icons/close.svg" alt="Remove"></button>
-                      </div>
-                </div>
+                                <button class="btn btn-danger btn-direct-delete" type="button"><img class="icon-delete" src="{{ @BASE }}/assets/images/icons/close.svg" alt="Remove"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                </false>
+
+            </check>
 
         </div>
 
