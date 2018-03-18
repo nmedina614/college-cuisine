@@ -1,10 +1,7 @@
 <?php
 /**
- * File used for controlling website navigation and routing.
- *
- * @author Aaron Melhaff
- * @author Nolan Medina
-*/
+ * Authors: Aaron Melhaff, Nolan Medina
+ */
 
 //Begin session
 session_start();
@@ -19,6 +16,7 @@ require_once('vendor/autoload.php');
 
 // Setup
 $f3 = Base::instance();
+$GLOBALS['target_file'] = "";
 
 // If User object has been stored in session, prepare
 // a unserialized version to be used in functions.
@@ -125,6 +123,13 @@ $f3->route('GET|POST /login', function($f3) {
 // Submit new Recipe
 $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 
+    //Checks to see if the user is logged in or not to submit a recipe
+    if(!isset($_SESSION['user'])) {
+
+        $f3->reroute('/login');
+
+    }
+
     //Post Array
     /*
      * Array ( [recipeName] => Spaghetti [prepTime] => 5 [cookTime] => 15
@@ -162,18 +167,18 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
         $f3->set('directs', $_POST['directs']);
 
         //See if there is any validation errors for inputs
-        $errors = Model::validateRecipe();
+        $errors = Validator::validateRecipe();
 
         //If no validation errors...
         if($errors == null) {
 
-            $target_file = "";
+            /*$target_file = "";
 
             //Upload image file to server
-            include("model/scripts/upload.php");
+            include("model/scripts/upload.php");*/
 
             //get the path for the file
-            $path = $target_file;
+            $path = $GLOBALS['target_file'];
 
             //upload the recipe to the database
             Model::insertRecipe($path);
@@ -227,10 +232,38 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 
 
     //See if user clicked like!
-    if(isset($_POST['submit'])) {
+    if(isset($_POST['like'])) {
 
-        //Like the Recipe!
-        Model::likeRecipe($params['recipeID']);
+        //see if the user is logged in and has enough privilege
+        if(isset($_SESSION['user']) && $GLOBALS['user']->getPrivilege() >= 0) {
+
+
+            if(!Model::validateLike($GLOBALS['user']->getUserid(), $params['recipeID'])){
+                $f3->set('error', "You have already liked this recipe!");
+            } else {
+                //Like the Recipe!
+                Model::likeRecipe($params['recipeID'], $GLOBALS['user']->getUserid());
+                $f3->set('success', "You have liked this recipe!");
+            }
+        } else {
+            $f3->set('error', "You must be logged in to like a recipe!");
+        }
+
+    } else if(isset($_POST['dislike'])) {
+
+        //see if the user is logged in and has enough privilege
+        if(isset($_SESSION['user']) && $GLOBALS['user']->getPrivilege() >= 0) {
+
+            if(!Model::validateDislike($GLOBALS['user']->getUserid(), $params['recipeID'])){
+                $f3->set('error', "You have already disliked this recipe!");
+            } else {
+                //dislike the Recipe!
+                Model::dislikeRecipe($params['recipeID'], $GLOBALS['user']->getUserid());
+                $f3->set('success', "You have disliked this recipe!");
+            }
+        } else {
+            $f3->set('error', "You must be logged in to dislike a recipe!");
+        }
 
     }
 
@@ -473,5 +506,44 @@ $f3->route('GET /registration/verify/@hash', function($f3, $params) {
     $template = new Template();
     echo $template->render('views/_base.html');
 });
+
+// Route for link for verifying new users.
+$f3->route('GET /registration/verify/@hash', function($f3, $params) {
+    if(isset($_SESSION['user']) && $GLOBALS['user']->getPrivilege() >= 0) {
+        $f3->reroute('/');
+    }
+
+    $hash = $params['hash'];
+
+    $result = Model::verifyAccount($hash);
+
+
+    // Title to use in template.
+    $title = "Verify Account";
+
+    // List of paths to stylesheets.
+    $styles = array();
+
+    // List of paths for sub-templates being used.
+    $includes = array(
+        'views/_nav.html',
+        'views/_verification.html'
+    );
+
+    // List of paths to scripts being used.
+    $scripts = array();
+
+    // Store page attributes to hive.
+    $f3->set('result',   $result);
+    $f3->set('title',    $title);
+    $f3->set('styles',   $styles);
+    $f3->set('includes', $includes);
+    $f3->set('scripts',  $scripts);
+
+    // Display Template
+    $template = new Template();
+    echo $template->render('views/_base.html');
+});
+
 
 $f3->run();
