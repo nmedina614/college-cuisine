@@ -31,8 +31,11 @@ $f3->set('DEBUG',3);
 // Establish database connection.
 Model::connect();
 
+$f3->set('rand', rand(0,Model::getAllRowCount()));
+
 // Homepage route.
 $f3->route('GET /', function($f3) {
+
     // Title to use in template.
     $title = "College Cuisine";
 

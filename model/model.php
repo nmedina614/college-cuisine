@@ -602,5 +602,19 @@ class Model
 
     }
 
+    public static function getAllRowCount()
+    {
+        // State query
+        $sql = 'SELECT * FROM `recipe`';
+
+        // Prepare database query.
+        $statement = self::$_dbh->prepare($sql);
+
+        // Launch Query.
+        $statement->execute();
+
+        return $statement->rowCount();
+    }
+
 
 }
