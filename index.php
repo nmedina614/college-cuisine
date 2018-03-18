@@ -162,7 +162,7 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
         $f3->set('directs', $_POST['directs']);
 
         //See if there is any validation errors for inputs
-        $errors = Model::validateRecipe();
+        $errors = Validator::validateRecipe();
 
         //If no validation errors...
         if($errors == null) {
@@ -233,7 +233,7 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
         if(isset($_SESSION['user']) && $GLOBALS['user']->getPrivilege() >= 0) {
 
 
-            if(!Model::validateLike($GLOBALS['user']->getUserid(), $params['recipeID'])){
+            if(!Validator::validateLike($GLOBALS['user']->getUserid(), $params['recipeID'])){
                 $f3->set('error', "You have already liked this recipe!");
             } else {
                 //Like the Recipe!
@@ -249,7 +249,7 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
         //see if the user is logged in and has enough privilege
         if(isset($_SESSION['user']) && $GLOBALS['user']->getPrivilege() >= 0) {
 
-            if(!Model::validateDislike($GLOBALS['user']->getUserid(), $params['recipeID'])){
+            if(!Validator::validateDislike($GLOBALS['user']->getUserid(), $params['recipeID'])){
                 $f3->set('error', "You have already disliked this recipe!");
             } else {
                 //dislike the Recipe!
