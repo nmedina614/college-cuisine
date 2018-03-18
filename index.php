@@ -33,13 +33,18 @@ $f3->set('DEBUG',3);
 // Establish database connection.
 Model::connect();
 
+$f3->set('rand', rand(0,Model::getAllRowCount()));
+
 // Homepage route.
 $f3->route('GET /', function($f3) {
+
     // Title to use in template.
     $title = "College Cuisine";
 
     // List of paths to stylesheets.
-    $styles = array();
+    $styles = array(
+        'assets/styles/home.css'
+    );
 
     // List of paths for sub-templates being used.
     $includes = array(
