@@ -40,7 +40,9 @@ $f3->route('GET /', function($f3) {
     $title = "College Cuisine";
 
     // List of paths to stylesheets.
-    $styles = array();
+    $styles = array(
+        'assets/styles/home.css'
+    );
 
     // List of paths for sub-templates being used.
     $includes = array(

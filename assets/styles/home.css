@@ -1,0 +1,35 @@
+.img-size-limit{
+
+    width: 20rem;
+    height: 20rem;
+    margin-left:2rem;
+
+}
+
+.card-custom {
+
+    width:23rem;
+    margin-top:2rem;
+
+}
+
+.width-limit{
+
+    width: 20rem;
+
+}
+
+.logo1{
+
+    width:75px;
+    height:90px;
+    transform: scaleX(-1);
+
+}
+
+.logo2{
+
+    width:75px;
+    height:90px;
+
+}
