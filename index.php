@@ -16,6 +16,7 @@ require_once('vendor/autoload.php');
 
 // Setup
 $f3 = Base::instance();
+$GLOBALS['target_file'] = "";
 
 // If User object has been stored in session, prepare
 // a unserialized version to be used in functions.
@@ -166,13 +167,13 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
         //If no validation errors...
         if($errors == null) {
 
-            $target_file = "";
+            /*$target_file = "";
 
             //Upload image file to server
-            include("model/scripts/upload.php");
+            include("model/scripts/upload.php");*/
 
             //get the path for the file
-            $path = $target_file;
+            $path = $GLOBALS['target_file'];
 
             //upload the recipe to the database
             Model::insertRecipe($path);
