@@ -1,7 +1,10 @@
 <?php
 /**
- * Authors: Aaron Melhaff, Nolan Medina
- */
+ * File used for controlling website navigation and routing.
+ *
+ * @author Aaron Melhaff
+ * @author Nolan Medina
+*/
 
 //Begin session
 session_start();
@@ -16,7 +19,6 @@ require_once('vendor/autoload.php');
 
 // Setup
 $f3 = Base::instance();
-$GLOBALS['target_file'] = "";
 
 // If User object has been stored in session, prepare
 // a unserialized version to be used in functions.
@@ -31,18 +33,13 @@ $f3->set('DEBUG',3);
 // Establish database connection.
 Model::connect();
 
-$f3->set('rand', rand(0,Model::getAllRowCount()));
-
 // Homepage route.
 $f3->route('GET /', function($f3) {
-
     // Title to use in template.
     $title = "College Cuisine";
 
     // List of paths to stylesheets.
-    $styles = array(
-        'assets/styles/home.css'
-    );
+    $styles = array();
 
     // List of paths for sub-templates being used.
     $includes = array(
@@ -123,13 +120,6 @@ $f3->route('GET|POST /login', function($f3) {
 // Submit new Recipe
 $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 
-    //Checks to see if the user is logged in or not to submit a recipe
-    if(!isset($_SESSION['user'])) {
-
-        $f3->reroute('/login');
-
-    }
-
     //Post Array
     /*
      * Array ( [recipeName] => Spaghetti [prepTime] => 5 [cookTime] => 15
@@ -167,18 +157,18 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
         $f3->set('directs', $_POST['directs']);
 
         //See if there is any validation errors for inputs
-        $errors = Validator::validateRecipe();
+        $errors = Model::validateRecipe();
 
         //If no validation errors...
         if($errors == null) {
 
-            /*$target_file = "";
+            $target_file = "";
 
             //Upload image file to server
-            include("model/scripts/upload.php");*/
+            include("model/scripts/upload.php");
 
             //get the path for the file
-            $path = $GLOBALS['target_file'];
+            $path = $target_file;
 
             //upload the recipe to the database
             Model::insertRecipe($path);
@@ -232,38 +222,10 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 
 
     //See if user clicked like!
-    if(isset($_POST['like'])) {
+    if(isset($_POST['submit'])) {
 
-        //see if the user is logged in and has enough privilege
-        if(isset($_SESSION['user']) && $GLOBALS['user']->getPrivilege() >= 0) {
-
-
-            if(!Model::validateLike($GLOBALS['user']->getUserid(), $params['recipeID'])){
-                $f3->set('error', "You have already liked this recipe!");
-            } else {
-                //Like the Recipe!
-                Model::likeRecipe($params['recipeID'], $GLOBALS['user']->getUserid());
-                $f3->set('success', "You have liked this recipe!");
-            }
-        } else {
-            $f3->set('error', "You must be logged in to like a recipe!");
-        }
-
-    } else if(isset($_POST['dislike'])) {
-
-        //see if the user is logged in and has enough privilege
-        if(isset($_SESSION['user']) && $GLOBALS['user']->getPrivilege() >= 0) {
-
-            if(!Model::validateDislike($GLOBALS['user']->getUserid(), $params['recipeID'])){
-                $f3->set('error', "You have already disliked this recipe!");
-            } else {
-                //dislike the Recipe!
-                Model::dislikeRecipe($params['recipeID'], $GLOBALS['user']->getUserid());
-                $f3->set('success', "You have disliked this recipe!");
-            }
-        } else {
-            $f3->set('error', "You must be logged in to dislike a recipe!");
-        }
+        //Like the Recipe!
+        Model::likeRecipe($params['recipeID']);
 
     }
 
@@ -356,7 +318,26 @@ $f3->route('GET /profiles/@user', function($f3, $params) {
 });
 
 // User Profile route
-$f3->route('GET /profile/reset-password', function($f3, $params) {
+$f3->route('GET|POST /profiles/@user/reset-password', function($f3, $params) {
+
+    // Process posted form.
+    if(isset($_POST['submit'])) {
+
+        $oldPassword  = $_POST['oldPassword'];
+        $newPassword1 = $_POST['newPassword1'];
+        $newPassword2 = $_POST['newPassword2'];
+
+        $invalid = $GLOBALS['user']->changePassword($oldPassword, $newPassword1, $newPassword2);
+
+        if(count($invalid) === 0) {
+
+            $f3->reroute('/');
+
+        } else {
+            // Store list of failure conditions in hive.
+            $f3->set('invalid', $invalid);
+        }
+    }
 
     // Reroute if not logged in!
     if(!Model::authorized()) {
@@ -372,7 +353,7 @@ $f3->route('GET /profile/reset-password', function($f3, $params) {
     // List of paths for sub-templates being used.
     $includes = array(
         'views/_nav.html',
-        'views/_profile.html'
+        'views/_reset-password.html'
     );
 
     // List of paths to scripts being used.
@@ -506,44 +487,5 @@ $f3->route('GET /registration/verify/@hash', function($f3, $params) {
     $template = new Template();
     echo $template->render('views/_base.html');
 });
-
-// Route for link for verifying new users.
-$f3->route('GET /registration/verify/@hash', function($f3, $params) {
-    if(isset($_SESSION['user']) && $GLOBALS['user']->getPrivilege() >= 0) {
-        $f3->reroute('/');
-    }
-
-    $hash = $params['hash'];
-
-    $result = Model::verifyAccount($hash);
-
-
-    // Title to use in template.
-    $title = "Verify Account";
-
-    // List of paths to stylesheets.
-    $styles = array();
-
-    // List of paths for sub-templates being used.
-    $includes = array(
-        'views/_nav.html',
-        'views/_verification.html'
-    );
-
-    // List of paths to scripts being used.
-    $scripts = array();
-
-    // Store page attributes to hive.
-    $f3->set('result',   $result);
-    $f3->set('title',    $title);
-    $f3->set('styles',   $styles);
-    $f3->set('includes', $includes);
-    $f3->set('scripts',  $scripts);
-
-    // Display Template
-    $template = new Template();
-    echo $template->render('views/_base.html');
-});
-
 
 $f3->run();

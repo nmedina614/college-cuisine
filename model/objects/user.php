@@ -103,18 +103,32 @@ class User
      *
      * @param $newPassword String representing the new password.
      */
-    public function changePassword($newPassword)
+    public function changePassword($oldPassword, $newPassword1, $newPassword2)
     {
-        Model::updatePassword($this->getUserid(), $newPassword);
+        // Confirm that user knows original password.
+        $confirmed = Model::confirmPassword($oldPassword);
+        if($confirmed) {
+            // Ensure new password is viable.
+            $invalid = Validator::validatePassword($newPassword1, $newPassword2);
 
-        // Information sent in email.
-        $subject = "Password Change";
-        $message = "Your password has been updated!
-            If this change was not made by you, contact an administrator!";
+            // If no errors are found, change password.
+            if(count($invalid) === 0) {
 
-        // Send email to user email containing password.
-        Model::sendMessage($this->getEmail(), $subject, $message);
+                // If everything is valid, change users password.
+                Model::updatePassword($this->getUserid(), $newPassword1);
+
+                // Information sent in email.
+                $subject = "Password Change";
+                $message = "Your password has been updated!
+                    If this change was not made by you, contact an administrator!";
+
+                // Send email to user email containing password.
+                Model::sendMessage($this->getEmail(), $subject, $message);
+            }
+        }
+        else return array('Old password didn\'t match.');
+
+
     }
-
 
 }

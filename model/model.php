@@ -105,13 +105,43 @@ class Model
                     $result['email'],
                     $result['privilege']));
 
-
             return true;
 
         } else return false;
+    }
 
+    /**
+     * Method for making user confirm password for security reasons.
+     *
+     * @param $password
+     * @return boolean Returns true or false whether attempt is successful.
+     */
+    public static function confirmPassword($password)
+    {
+        // Statement to prepare.
+        $sql = 'SELECT userid FROM user WHERE userid=:userid AND password=:password';
 
+        // Prepare statement.
+        $stmt = self::$_dbh->prepare($sql);
 
+        // Pull username from unserialized session variable.
+        $userid   = $GLOBALS['user']->getUserid();
+
+        // Hash password passed in.
+        $passHash = hash('sha256', $password);
+
+        // Bind all userid and hashed password.
+        $stmt->bindParam(':userid',   $userid,   PDO::PARAM_INT);
+        $stmt->bindParam(':password', $passHash, PDO::PARAM_STR);
+
+        // Execute Query.
+        $stmt->execute();
+
+        // Pull first result.
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Return true if result set is not empty
+        return isset($result['userid']);
     }
 
     /**
@@ -658,20 +688,6 @@ class Model
             return true;
         }
 
-    }
-
-    public static function getAllRowCount()
-    {
-        // State query
-        $sql = 'SELECT * FROM `recipe`';
-
-        // Prepare database query.
-        $statement = self::$_dbh->prepare($sql);
-
-        // Launch Query.
-        $statement->execute();
-
-        return $statement->rowCount();
     }
 
 

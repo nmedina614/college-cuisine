@@ -24,13 +24,46 @@ class Validator
     {
         $invalid = array();
 
-
-        if(preg_match("/^[0-9a-zA-Z_]{8,}$/", $username)) {
-            $invalid[] = 'User must be bigger that 8 chars and contain only digits, letters and underscore';
+        if(!preg_match('/^[a-zA-Z]+[a-zA-Z0-9._]+$/', $username)) {
+            $invalid[] = 'Username must be alphanumeric!';
+        }
+        if(strlen($username) <= 8) {
+            $invalid[] = 'Username must be at least 8 characters long!';
+        }
+        if(strlen($username) > 40) {
+            $invalid[] = 'Username cannot be longer than 40 characters long!';
         }
 
-        if(!empty($password1)) {
 
+        $invalidPassword = self::validatePassword($password1, $password2);
+
+        foreach($invalidPassword as $value) {
+            $invalid[] = $value;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $invalid[] = "Invalid email address!";
+        }
+
+        return $invalid;
+    }
+
+    /**
+     * Method for validating new passwords.
+     *
+     * @param $password1 String representing the first password entry.
+     * @param $password2 String representing the repeat password entry.
+     * @return array Returns an array of string containing failure messages.
+     */
+    public static function validatePassword($password1, $password2)
+    {
+        $invalid = array();
+
+        if(!empty($password1)) {
+            if($password1 != $password2) {
+
+                $invalid[] = "Passwords do not match!";
+            }
             if(strlen($password1) <= '8') {
 
                 $invalid[] = "Your Password Must Contain At Least 8 Characters!";
@@ -47,20 +80,8 @@ class Validator
 
                 $invalid[] = "Your Password Must Contain At Least 1 Lowercase Letter!";
             }
-            if(!preg_match("/[$@$!%*#?&]+/",$password1)) {
-
-                $invalid[] = "Your Password Must Contain At Least 1 special character!";
-
-            }
-        }
-        elseif($password1 != $password2) {
-            $invalid[] = "Passwords do not match!";
         } else {
             $invalid[] = "Please enter password";
-        }
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $invalid[] = "Invalid email address!";
         }
 
         return $invalid;

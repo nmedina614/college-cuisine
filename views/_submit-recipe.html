@@ -98,6 +98,7 @@
                     <div class="col-md-6 pb-3">
                         <span>Direction <button type="button" class="btn btn-sm btn-light" id="btn-add-direct">Add <img class="icon-add" src="{{ @BASE }}/assets/images/icons/plus.svg" alt=""></button></span>
                         <div id="direction-list">
+
                             <repeat group="{{ @directs }}" value="{{ @directions }}">
                                 <div class="input-group mb-3 direct-item">
                                     <input type="text" class="form-control" placeholder="Add Directions Here" class="input-directions" name="directs[]" value="{{@directions}}">
