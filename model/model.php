@@ -554,7 +554,53 @@ class Model
         } else return false;
     }
 
+    public static function validateLike($userID, $recipeID){
 
+
+
+        $sql = 'SELECT * FROM `liked-recipes` WHERE userID = :userID AND recipeID = :recipeID';
+
+        $searchQuery = self::$_dbh->prepare($sql);
+
+        $searchQuery->bindParam(':userID', $userID, PDO::PARAM_STR);
+        $searchQuery->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+
+        $searchQuery->execute();
+
+        $result = $searchQuery->rowCount();
+
+        if($result > 0){
+
+            return false;
+
+        } else {
+            return true;
+        }
+
+    }
+
+    public static function validateDislike($userID, $recipeID){
+
+        $sql = 'SELECT * FROM `dislike-recipe` WHERE userID = :userID AND recipeID = :recipeID';
+
+        $searchQuery = self::$_dbh->prepare($sql);
+
+        $searchQuery->bindParam(':userID', $userID, PDO::PARAM_STR);
+        $searchQuery->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+
+        $searchQuery->execute();
+
+        $result = $searchQuery->rowCount();
+
+        if($result > 0){
+
+            return false;
+
+        } else {
+            return true;
+        }
+
+    }
 
 
 }
