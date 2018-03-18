@@ -1,17 +1,22 @@
 <?php
 
-/*
- * This file should contain domain specific login credentials:
- * DB_DSN
- * DB_USERNAME
- * DB_PASSWORD
+/**
+ * This file link to a folder in the root folder containing a file
+ * with Constants named:
+ * - DB_DSN
+ * - DB_USERNAME
+ * - DB_PASSWORD
  */
 require $_SERVER['DOCUMENT_ROOT'] . "/../config/cc_config.php";
 
 /**
  * Class Model
  *
- * TODO
+ * Class used to handle logical operations and
+ * database interactions.
+ *
+ * @author Aaron Melhaff <nash_melhaff@hotmail.com>
+ * @author Nolan Medina <nmedina@mail.greenriver.edu>
  */
 class Model
 {
@@ -19,10 +24,15 @@ class Model
     private static $_dbh;
 
     /**
-     * TODO
+     * Function used to initialise the $_dbh field.
+     *
+     * Takes constants posted in the config file
+     * and uses then to instantiate a PDO database
+     * object.
      */
     public static function connect()
     {
+        // If there isn't already a database variable...
         if(!isset($_dbh)) {
             try {
                 // instantiate pdo object.
@@ -35,9 +45,16 @@ class Model
     }
 
     /**
-     * TODO
+     * Method used to make login attempts.
      *
-     * @return bool
+     * Takes posted username and password and
+     * checks to see if there is a matching
+     * user in the database. If the query
+     * is a success, then it stores the
+     * users information in the session as
+     * a user object.
+     *
+     * @return bool Boolean representing whether the login was successful.
      */
     public static function login()
     {
@@ -68,16 +85,20 @@ class Model
         // If it isn't empty, store pulled info into session.
         if(isset($result['username'])) {
 
-            // Store user information in Session.
+            // Store user information as user object in Session.
             $_SESSION['user'] =
                 ($result['privilege'] == 'moderator' ||
                  $result['privilege'] == 'admin') ?
+
+                    // If the users privilege level is mod or admin,
+                    // store an admin object.
                     serialize(new Moderator(
                     $result['userid'],
                     $result['username'],
                     $result['email'],
                     $result['privilege'])) :
 
+                    // Otherwise store a normal user.
                     serialize(new User(
                     $result['userid'],
                     $result['username'],
@@ -94,41 +115,43 @@ class Model
     }
 
     /**
-     * TODO
+     * Method for converting from privilege string
+     * to authorization int.
      *
-     * @param $privilege
-     * @return int
+     * @param $privilege String found in user object.
+     * @return int Integer used to compare different privilege types.
      */
     public static function getAuthority($privilege)
     {
-        $authority = -1;
 
+        //Take string and return integer representing privilege value.
         switch($privilege) {
             case 'admin':
-                $authority = 2;
-                break;
-            case 'moderator':
-                $authority = 1;
-                break;
-            case 'basic':
-                $authority = 0;
-                break;
-            default:
-                break;
-        }
+                return 2;
 
-        return $authority;
+            case 'moderator':
+                return 1;
+
+            case 'basic':
+                return 0;
+
+            default:
+                return -1;
+        }
 
     }
 
     /**
+     * Method for seeing if a user has a required authority level.
+     *
      * Method that takes a number. If the privilege is
-     * greater or equal to the input parameter, then
-     * return true. Otherwise, return false. The options are:
-     * -1: Not logged in or active.
-     * 0: basic log in.
-     * 1: moderator login.
-     * 2: admin login.
+     * greater or equal to the input parameter, then it
+     * returns true. Otherwise, it returns false.
+     * The options are:
+     * * -1: Not logged in or active.
+     * * 0: basic log in.
+     * * 1: moderator login.
+     * * 2: admin login.
      *
      * @param $needed Authority level needed.
      * @return Returns whether the authority level is great enough.
@@ -144,7 +167,9 @@ class Model
     }
 
     /**
-     * TODO
+     * Method used to pull all users that are not admins.
+     *
+     * @return Returns an array of results.
      */
     public static function viewUsers()
     {
@@ -164,10 +189,11 @@ class Model
     }
 
     /**
-     * TODO
+     * Method used to change the password of the user with
+     * the given id.
      *
-     * @param $userid
-     * @param $newPassword
+     * @param $userid Integer id of the user whose password is being changed.
+     * @param $newPassword String new password for the given user.
      */
     public static function updatePassword($userid, $newPassword)
     {
@@ -186,9 +212,10 @@ class Model
     }
 
     /**
-     * TODO
+     * Method for deleting users.
      *
-     * @param $userid
+     * @param $userid Integer id of user being deleted.
+     * @return Returns true/false whether the user was removed.
      */
     public static function deleteUser($userid)
     {
@@ -202,19 +229,15 @@ class Model
         $statement->bindParam(':userid', $userid, PDO::PARAM_INT);
 
         // Launch Query.
-        $statement->execute();
+        return $statement->execute();
     }
 
-
-
-
-
     /**
-     * TODO
+     * Method for sending emails to a given recipient.
      *
-     * @param $recipient
-     * @param $password
-     * @param $sender
+     * @param $recipient String email address to send to.
+     * @param $subject String displayed at the top of the email.
+     * @param $message String representing the body of the message.
      */
     public static function sendMessage($recipient, $subject, $message)
     {
@@ -227,12 +250,12 @@ class Model
     }
 
     /**
-     * TODO
+     * Method for generating random password strings.
      *
      * Taken from https://stackoverflow.com/questions/1837432/how-to-generate-random-password-with-php
      *
-     * @param int $length
-     * @return string
+     * @param $length Integer representing the length of the password string to generate.
+     * @return string Returns a string random password of the given length.
      */
     public static function generatePassword($length = 64) {
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -343,10 +366,10 @@ class Model
     }
 
     /**
-     * TODO
+     * Method for changing a users privilege level.
      *
-     * @param $targetID
-     * @param $sourceID
+     * @param $targetID Integer id of user being altered.
+     * @param $newPrivilege String new level to be assigned.
      */
     public static function reassignUser($targetID, $newPrivilege)
     {
@@ -459,14 +482,26 @@ class Model
 
     }
 
+    /**
+     * Method for registering a new user.
+     *
+     * Takes input data from POST array.
+     * If the fields are valid, it adds
+     * them to the database. If not,
+     * it returns an array of strings
+     * containing reasons for failure.
+     *
+     * @return array Returns an array of strings containing reasons for failure.
+     */
     public static function register() {
 
+        // Store post fields in variables for sanity sake.
         $username  = $_POST['username'];
         $password1 = $_POST['password1'];
         $password2 = $_POST['password2'];
         $email     = $_POST['email'];
 
-
+        // Validate params and get invalid in array.
         $invalid = Validator::validateRegistration($username, $password1, $password2, $email);
 
         if(count($invalid) == 0) {
@@ -485,6 +520,8 @@ class Model
             // Launch Query.
             $success = $statement->execute();
 
+            // If the user is inserted, use the new users id to create a verification hash
+            // and store it in the db.
             if($success) {
                 $userid = self::$_dbh->lastInsertId();
                 $hash = hash('sha256', self::generatePassword());
@@ -497,6 +534,7 @@ class Model
 
                 $result = $stmt->execute();
 
+                // If the hash is stored successfully, send an email with the hash.
                 if($result) {
                     self::sendMessage($email, 'Account verification',
                         'Thank you for signing up with College-Cuisine!
@@ -509,6 +547,7 @@ class Model
             }
         }
 
+        // Return list of invalid inputs.
         return $invalid;
 
 
@@ -516,9 +555,15 @@ class Model
     }
 
     /**
-     * TODO
+     * Method for verifying an account email.
      *
-     * @param $hash
+     * Takes a given hash and checks that there
+     * is a corresponding hash in the database.
+     * If there is, it takes the userid associated with
+     * the hash and changes the users privilege level to
+     * basic. Then deletes the hash from the db.
+     *
+     * @param $hash String verification hash being compared.
      */
     public static function verifyAccount($hash)
     {
@@ -554,8 +599,14 @@ class Model
         } else return false;
     }
 
+    /**
+     * TODO
+     *
+     * @param $userID
+     * @param $recipeID
+     * @return bool
+     */
     public static function validateLike($userID, $recipeID){
-
 
 
         $sql = 'SELECT * FROM `liked-recipes` WHERE userID = :userID AND recipeID = :recipeID';
@@ -579,6 +630,13 @@ class Model
 
     }
 
+    /**
+     * TODO
+     *
+     * @param $userID
+     * @param $recipeID
+     * @return bool
+     */
     public static function validateDislike($userID, $recipeID){
 
         $sql = 'SELECT * FROM `dislike-recipe` WHERE userID = :userID AND recipeID = :recipeID';

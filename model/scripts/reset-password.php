@@ -1,8 +1,9 @@
 <?php
 /**
- * Author: Aaron Melhaff
- * Date: 3/15/2018
- * Time: 10:53 AM
+ * Script used to handle password reset requests.
+ *
+ * @author Aaron Melhaff <nash_melhaff@hotmail.com>
+ * @since 3/15/2018
  */
 
 session_start();

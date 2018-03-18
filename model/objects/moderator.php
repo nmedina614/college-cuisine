@@ -1,17 +1,22 @@
 <?php
 /**
- * Author: Aaron Melhaff
- * Date: 3/15/2018
- * Time: 1:51 PM
+ * Class Moderator
+ *
+ * Class used to extend the types of data manipulation available.
+ * Comes with methods to help ease user related data manipulation
+ * and interaction.
+ *
+ * Requires access to a model class.
+ *
+ * @author Aaron Melhaff <nash_melhaff@hotmail.com>
  */
-
 class Moderator extends User
 {
 
     /**
-     * TODO
+     * Method for disabling another user based on id.
      *
-     * @param $userid
+     * @param $userid int Id of user being banned.
      */
     public function ban($userid)
     {
@@ -19,9 +24,9 @@ class Moderator extends User
     }
 
     /**
-     * TODO
+     * Method for reinstating another user based on id.
      *
-     * @param $userid
+     * @param $userid int Id of user being reinstated.
      */
     public function reinstate($userid)
     {
@@ -29,9 +34,9 @@ class Moderator extends User
     }
 
     /**
-     * TODO
+     * Method for promoting another user based on id.
      *
-     * @param $userid
+     * @param $userid int Id of user being promoted.
      */
     public function promote($userid)
     {
@@ -39,9 +44,9 @@ class Moderator extends User
     }
 
     /**
-     * TODO
+     * Method for demoting another user based on id.
      *
-     * @param $userid
+     * @param $userid int Id of user being demoted.
      */
     public function demote($userid)
     {
@@ -49,9 +54,9 @@ class Moderator extends User
     }
 
     /**
-     * TODO
+     * Method for deleting another user based on id.
      *
-     * @param $userid
+     * @param $userid int Id of user being deleted.
      */
     public function delete($userid)
     {

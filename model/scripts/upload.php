@@ -1,4 +1,11 @@
 <?php
+/**
+ * Script used to handle file upload requests.
+ *
+ * @author Nolan Medina
+ * @since 3/15/2018
+ */
+
 $target_dir = "assets/images/";
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 $uploadOk = 1;

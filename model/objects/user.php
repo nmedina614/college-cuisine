@@ -1,7 +1,15 @@
 <?php
 
 /**
- * Class User TODO
+ * Class User
+ *
+ * Class used to store user information. Comes with methods to help ease
+ * user related data manipulation and interaction.
+ *
+ * Requires access to a model class.
+ *
+ *
+ * @author Aaron Melhaff <nash_melhaff@hotmail.com>
  */
 class User
 {
@@ -11,11 +19,12 @@ class User
     private $_privilege;
 
     /**
-     * User constructor. TODO
-     * @param $userid
-     * @param $username
-     * @param $email
-     * @param $privilege
+     * Constructor for the User class.
+     *
+     * @param $userid int representing the users id within the database.
+     * @param $username String representing the users account name.
+     * @param $email String email representing the address to contact the user with.
+     * @param $privilege String representing the users level of authority in the site.
      */
     public function __construct($userid, $username, $email, $privilege)
     {
@@ -26,7 +35,9 @@ class User
     }
 
     /**
-     * @return mixed
+     * Getter method for the userid field.
+     *
+     * @return int Returns the user's id as an int.
      */
     public function getUserid()
     {
@@ -34,7 +45,9 @@ class User
     }
 
     /**
-     * @return mixed
+     * Getter method for the username field.
+     *
+     * @return String Returns the user's username as a String.
      */
     public function getUsername()
     {
@@ -42,7 +55,9 @@ class User
     }
 
     /**
-     * @return mixed
+     * Getter method for the email field.
+     *
+     * @return String Returns the user's email as a String.
      */
     public function getEmail()
     {
@@ -50,7 +65,9 @@ class User
     }
 
     /**
-     * @return mixed
+     * Getter method for the privilege field.
+     *
+     * @return String Returns the user's privilege level as a String.
      */
     public function getPrivilege()
     {
@@ -58,9 +75,12 @@ class User
     }
 
     /**
-     * TODO
+     * Method that resets password and sends new one to user.
      *
-     * @param $userid
+     * Method that changes the users password to a string of
+     * random characters 32 chars in length. Once finished,
+     * sends an email to the user with their new random
+     * password.
      */
     public function resetPassword()
     {
@@ -79,9 +99,9 @@ class User
     }
 
     /**
-     * TODO
+     * Method that changes the users password to the input parameter.
      *
-     * @param $newPassword
+     * @param $newPassword String representing the new password.
      */
     public function changePassword($newPassword)
     {

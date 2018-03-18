@@ -1,24 +1,31 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nash
- * Date: 3/17/2018
- * Time: 1:05 AM
- */
 
+/**
+ * Class Validator
+ *
+ * Class used to handle input validation.
+ *
+ * @author Aaron Melhaff <nash_melhaff@hotmail.com>
+ * @author Nolan Medina <nmedina@mail.greenriver.edu>
+ */
 class Validator
 {
     /**
-     * TODO
+     * Method used to validate a user registration attempt.
      *
-     * @returns
+     * @param $username String representing the username of the new user.
+     * @param $password1 String representing the password of the new user.
+     * @param $password2 String representing the repeated password of the new user.
+     * @param $email String representing the email address of the new user.
+     *
+     * @returns array Returns an array of string containing failed test results.
      */
     public static function validateRegistration($username, $password1, $password2, $email)
     {
         $invalid = array();
 
 
-        if(preg_match("/^[0-9a-zA-Z_]{8,}$/", $_POST["user"])) {
+        if(preg_match("/^[0-9a-zA-Z_]{8,}$/", $username)) {
             $invalid[] = 'User must be bigger that 8 chars and contain only digits, letters and underscore';
         }
 
@@ -57,10 +64,6 @@ class Validator
         }
 
         return $invalid;
-    }
-
-    public static function test_input($data) {
-        return $data;
     }
 
 
@@ -180,15 +183,24 @@ class Validator
     }
 
     /**
-     * @param $data - value to test Validation function
+     * Method that checks if a recipe name is empty.
+     *
+     * @return Returns true or false if empty.
      */
-    public static function notEmpty($data)
+    public static function notEmpty()
     {
         if ($_POST['recipeName'] == "") {
             return false;
         }
         return true;
     }
+
+    /**
+     * Method that returns whether the input is alphanumeric.
+     *
+     * @param $data Input being compared.
+     * @return bool Boolean representing test success or failure
+     */
     public static function isAlphaNum($data)
     {
         if (!preg_match('/^[a-z\d\-_\s]+$/i', $data)) {
@@ -196,6 +208,13 @@ class Validator
         }
         return true;
     }
+
+    /**
+     * Method that checks if input is numeric.
+     *
+     * @param $num Takes input
+     * @return bool Returns boolean result.
+     */
     public static function validateNum($num)
     {
         if (!is_numeric($num)) {
@@ -206,6 +225,14 @@ class Validator
         }
         return true;
     }
+
+    /**
+     * Method for returning if the string is the proper
+     * length for a tinytext value.
+     *
+     * @param $data Input being evaluated.
+     * @return bool Returns boolean test result.
+     */
     public static function validateTinyText($data)
     {
         if(!(strlen($data) < 255)){
