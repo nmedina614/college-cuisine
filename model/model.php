@@ -660,19 +660,22 @@ class Model
 
     }
 
-    public static function getAllRowCount()
-    {
-        // State query
-        $sql = 'SELECT * FROM `recipe`';
+    public static function deleteRecipe() {
+        $sql = 'DELETE FROM `user-recipe` WHERE `recipeID` = :recipeID';
 
-        // Prepare database query.
-        $statement = self::$_dbh->prepare($sql);
+        $searchQuery = self::$_dbh->prepare($sql);
 
-        // Launch Query.
-        $statement->execute();
+        $searchQuery->bindParam(':recipeID', $_SESSION['recipeID'], PDO::PARAM_INT);
 
-        return $statement->rowCount();
+        $searchQuery->execute();
+
+        $sql = 'DELETE FROM `recipe` WHERE `recipeID` = :recipeID';
+
+        $searchQuery = self::$_dbh->prepare($sql);
+
+        $searchQuery->bindParam(':recipeID', $_SESSION['recipeID'], PDO::PARAM_INT);
+
+        $searchQuery->execute();
     }
-
 
 }

@@ -31,13 +31,17 @@ $f3->set('DEBUG',3);
 // Establish database connection.
 Model::connect();
 
-$f3->set('rand', rand(0,Model::getAllRowCount()));
+//Random Recipe
+$recipes  = Model::getAllRecipes();
+
+$f3->set('rand', $recipes[rand(0,sizeof($recipes))]['recipeid']);
 
 // Homepage route.
-$f3->route('GET /', function($f3) {
+$f3->route('GET /', function($f3, $recipes) {
 
     // Title to use in template.
     $title = "College Cuisine";
+
 
     // List of paths to stylesheets.
     $styles = array(
@@ -230,6 +234,7 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 // Submit Recipe route
 $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 
+    $_SESSION['recipeID'] = $params['recipeID'];
 
     //See if user clicked like!
     if(isset($_POST['like'])) {
@@ -267,17 +272,16 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 
     }
 
-    // Title to use in template.
-    $title = "College Cuisine";
-
-
     //Gets the Recipe from the database.
     $result = Model::getRecipe($params['recipeID']);
+
+    // Title to use in template.
+    $title = $result['name'];
 
     // List of paths to stylesheets.
     $styles = array(
         // If you need a stylesheet do
-        //$f3->get('BASE').'/assets/styles/STYLESHEET-NAME.css
+        $f3->get('BASE').'/assets/styles/recipe.css'
     );
 
     // List of paths for sub-templates being used.
@@ -289,7 +293,7 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
     // List of paths to scripts being used.
     $scripts = array(
         // If you need a script do
-        //$f3->get('BASE').'/assets/scripts/SCRIPT-NAME.js
+        $f3->get('BASE').'/assets/scripts/recipe-scripts.js'
     );
 
 
