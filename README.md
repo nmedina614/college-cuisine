@@ -2,7 +2,7 @@
 A website for college students who don't always want to eat ramen and want something better.
 
 
-#Requirements:
+# Requirements:
 * Separate all database/business logic:
     * 
     
