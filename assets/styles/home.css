@@ -1,3 +1,5 @@
+/* Limits the image size to fit the bootstrap
+    card */
 .img-size-limit{
 
     width: 20rem;
@@ -6,6 +8,7 @@
 
 }
 
+/* Creates a custom card size */
 .card-custom {
 
     width:23rem;
@@ -13,12 +16,14 @@
 
 }
 
+/* Sets limit for text */
 .width-limit{
 
     width: 20rem;
 
 }
 
+/* flips logo and sets size for home page */
 .logo1{
 
     width:75px;
@@ -27,6 +32,7 @@
 
 }
 
+/* sets size for logo on home page */
 .logo2{
 
     width:75px;

@@ -89,44 +89,70 @@ class Validator
 
 
     /**
-     * TODO
+     * Validates that the user can submit the form.
+     *
+     * Validates that the user can submit the form,
+     * correctly else return the user to the page of the form
+     * and have them enter the data correctly and also uploads the file
+     * to the server, if none are chosen then uses a default file, or if there's
+     * an error, reports it just a like the rest of the validation.
+     *
+     * @return array - Errors array to show errors in form.
      */
     public static function validateRecipe()
     {
+        //Default Value to initialize array
         $errors = array('There was an error in your submit recipe form:');
-        //echo sizeof($errors);
+
+        //For each value in the array, checks to see if the value is empty
         foreach($_POST as $value){
             $valid = self::notEmpty($value);
             $error = "You are missing data, Please make sure all fields are not empty";
             if(!$valid){
+                //Adds to array if there is a form missing any elements, then breaks the loop
                 array_push($errors, $error);
                 break;
             }
         }
+
+        //Checks to see if the name is alphanumeric + space
         $valid = self::isAlphaNum($_POST['recipeName']);
         if(!$valid){
+            //Pushes to array if invalid
             array_push($errors, "There is an error in the Recipe Name, Please keep the name alphanumeric");
         }
+
+        //makes sure that the value is a number
         $valid = self::validateNum($_POST['prepTime']);
         if(!$valid){
             array_push($errors, "There is an error in the Prep Time, please keep it a positive number");
         }
+
+        //makes sure that the value is a number
         $valid = self::validateNum($_POST['cookTime']);
         if(!$valid){
             array_push($errors, "There is an error in the Cook Time, please keep it a positive number");
         }
+
+        //makes sure that the value is a number
         $valid = self::validateNum($_POST['servs']);
         if(!$valid){
             array_push($errors, "There is an error in the Servings, please keep it a positive number");
         }
+
+        //makes sure that the value is a number
         $valid = self::validateNum($_POST['cals']);
         if(!$valid){
             array_push($errors, "There is an error in the Calories, please keep it a positive number");
         }
+
+        //makes sure that the value is less than 255 chars
         $valid = self::validateTinyText($_POST['description']);
         if(!$valid){
             array_push($errors, "There is an error in the description, please try to make it under 255 characters");
         }
+
+        //Goes through ingreds array to make sure all are less than 255 chars
         foreach($_POST['ingreds'] as $value){
             $valid = self::validateTinyText($value);
             if(!$valid){
@@ -135,6 +161,8 @@ class Validator
                 break;
             }
         }
+
+        //Goes through directs array to make sure all are less than 255 chars
         foreach($_POST['directs'] as $value){
             $valid = self::validateTinyText($value);
             if(!$valid){
@@ -147,8 +175,9 @@ class Validator
         //Target Directory for file upload
         $target_dir = "assets/images/";
 
-        //Target File to upload
+        //Trys to upload file - taken from https://www.w3schools.com/php/php_file_upload.asp
         try{
+            //gets the file path to where you want to upload the image to
             $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
             $uploadOk = 1;
             //Image file type
@@ -192,25 +221,30 @@ class Validator
                     array_push($errors, "Sorry, there was an error uploading your file.");
                 }
             }
+            //If there is a problem with uploading the file, uses default image.
         }catch(Exception $e){
             $GLOBALS['target_file'] = 'assets/images/default.jpg';
         }
 
-        //echo sizeof($errors);
+        //if size of errors is one, no validation errors so return null array for
+        //comparison later.
         if(sizeof($errors)==1){
             $errors = null;
         }
+
+        //Returns errors array
         return $errors;
     }
 
     /**
      * Method that checks if a recipe name is empty.
      *
-     * @return Returns true or false if empty.
+     * @param $value mixed checks to see if input is empty
+     * @return boolean Returns true or false if empty.
      */
-    public static function notEmpty()
+    public static function notEmpty($value)
     {
-        if ($_POST['recipeName'] == "") {
+        if ($value == "") {
             return false;
         }
         return true;
@@ -219,7 +253,7 @@ class Validator
     /**
      * Method that returns whether the input is alphanumeric.
      *
-     * @param $data Input being compared.
+     * @param $data INT Input being compared.
      * @return bool Boolean representing test success or failure
      */
     public static function isAlphaNum($data)
@@ -233,7 +267,7 @@ class Validator
     /**
      * Method that checks if input is numeric.
      *
-     * @param $num Takes input
+     * @param $num INT Takes input
      * @return bool Returns boolean result.
      */
     public static function validateNum($num)
@@ -251,7 +285,7 @@ class Validator
      * Method for returning if the string is the proper
      * length for a tinytext value.
      *
-     * @param $data Input being evaluated.
+     * @param $data String Input being evaluated.
      * @return bool Returns boolean test result.
      */
     public static function validateTinyText($data)

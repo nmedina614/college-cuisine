@@ -1,0 +1,31 @@
+/* alert styles for spacing */
+.alert-custom {
+    margin-top: 2rem;
+}
+
+/* sets style for ordered list */
+ol{
+    padding: 20px;
+    list-style-type:decimal;
+
+}
+
+/* Bolds numbered elements in list */
+ol li {
+    float: left;
+    margin: 0 10px;
+    padding: 0 10px;
+    font-weight: bold;
+}
+
+/* makes elements in li tag not bold */
+ol li p{
+    font-weight: normal;
+}
+
+/* added for spacing */
+.btn-recipe {
+
+    margin-bottom: 0.5rem;
+
+}
