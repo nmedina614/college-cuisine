@@ -100,15 +100,12 @@ $('#recipeForm').submit(function(){
 
     //validates name is not empty and is alphanumeric
     function validateName(name){
-
-        if(name == "" ) {
-
+        if(name.length < 2) {
             return false;
         }
 
-        var letters = '/^[0-9a-zA-Z]+$/';
+        var letters = '/^[a-z\d-_\s]+$/i';
         if(name.match(letters)) {
-            //console.log('Name is Valid');
             return true;
         }
         return false;
