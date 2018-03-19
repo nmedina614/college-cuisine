@@ -11,7 +11,7 @@ $('.btn-ingredient-delete').click(function() {
 $('#btn-add-ingredient').click(function() {
     const CLONE_HTML =
         '<div class="input-group mb-3 ingredient-item">\n' +
-        '    <input type="text" class="form-control" placeholder="Add Ingredients Here" class="input-ingredient">\n' +
+        '    <input type="text" class="form-control" placeholder="Add Ingredients Here" class="input-ingredient" name="ingreds[]">\n' +
         '    <button class="btn btn-danger btn-ingredient-delete" type="button"><img class="icon-delete" src="../assets/images/icons/close.svg" alt="Remove"></button>\n' +
         '</div>';
 

@@ -1,10 +1,7 @@
 <?php
 /**
- * File used for controlling website navigation and routing.
- *
- * @author Aaron Melhaff
- * @author Nolan Medina
-*/
+ * Authors: Aaron Melhaff, Nolan Medina
+ */
 
 //Begin session
 session_start();
@@ -19,6 +16,7 @@ require_once('vendor/autoload.php');
 
 // Setup
 $f3 = Base::instance();
+$GLOBALS['target_file'] = "";
 
 // If User object has been stored in session, prepare
 // a unserialized version to be used in functions.
@@ -33,13 +31,22 @@ $f3->set('DEBUG',3);
 // Establish database connection.
 Model::connect();
 
+//Random Recipe
+$recipes  = Model::getAllRecipes();
+
+$f3->set('rand', $recipes[rand(0,sizeof($recipes))]['recipeid']);
+
 // Homepage route.
-$f3->route('GET /', function($f3) {
+$f3->route('GET /', function($f3, $recipes) {
+
     // Title to use in template.
     $title = "College Cuisine";
 
+
     // List of paths to stylesheets.
-    $styles = array();
+    $styles = array(
+        'assets/styles/home.css'
+    );
 
     // List of paths for sub-templates being used.
     $includes = array(
@@ -120,29 +127,12 @@ $f3->route('GET|POST /login', function($f3) {
 // Submit new Recipe
 $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 
-    //Post Array
-    /*
-     * Array ( [recipeName] => Spaghetti [prepTime] => 5 [cookTime] => 15
-     * [servs] => 4 [cals] => 150 [description] => A classic Italian masterpiece that you'll love
-     * [ingreds] => Array ( [0] => 16oz ground beef [1] => meat sauce [2] => water [3] => salt [4]
-     *      => pepper )
-     * [directs] => Array ( [0] => Start boiling water [1] => cook ground beef and add meat sauce to it
-     *      [2] => once finished w/ both, plate pasta then beef on top [3] => Enjoy ) )
-     */
+    //Checks to see if the user is logged in or not to submit a recipe
+    if(!isset($_SESSION['user'])) {
 
-    //Insert Statement
-    /*
-     * INSERT INTO `recipe` (
-     * `recipeid`, `name`, `prepTime`, `cookTime`, `servings`, `cal`
-     * , `descript`, `ingredients`, `directions`, `likes`) VALUES
-     * (NULL, 'Spaghetti', '5', '15', '4', '150',
-     * 'A classic Italian dish that is both cheap to make and delicious.',
-     * '16oz of Ground Beef, 16oz of Pasta Noodles, Salt, Pepper, Water, meatsauce',
-     * 'Boil Water, Put noodles in water, fry ground beef in pan
-     *      until cooked, add meat sauce to beef, once pasta is finished along with the
-     *      beef add pasta to plate followed by beef on top',
-     * '5');
-     */
+        $f3->reroute('/login');
+
+    }
 
     if(isset($_POST['submit'])){
 
@@ -157,21 +147,16 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
         $f3->set('directs', $_POST['directs']);
 
         //See if there is any validation errors for inputs
-        $errors = Model::validateRecipe();
+        $errors = Validator::validateRecipe();
 
         //If no validation errors...
         if($errors == null) {
 
-            $target_file = "";
-
-            //Upload image file to server
-            include("model/scripts/upload.php");
-
             //get the path for the file
-            $path = $target_file;
+            $path = $GLOBALS['target_file'];
 
             //upload the recipe to the database
-            Model::insertRecipe($path);
+            Model::insertRecipe($path, $GLOBALS['user']->getUserid());
 
 
             //Reroute to homepage
@@ -202,7 +187,7 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
         $f3->get('BASE').'/assets/scripts/recipe-scripts.js',
 
         //testings php stickiness
-        //TODO uncomment://$f3->get('BASE').'/assets/scripts/validate-recipe.js'
+        $f3->get('BASE').'/assets/scripts/validate-recipe.js'
     );
     $f3->set('title',    $title);
     $f3->set('styles',   $styles);
@@ -220,26 +205,54 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 // Submit Recipe route
 $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
 
+    $_SESSION['recipeID'] = $params['recipeID'];
 
     //See if user clicked like!
-    if(isset($_POST['submit'])) {
+    if(isset($_POST['like'])) {
 
-        //Like the Recipe!
-        Model::likeRecipe($params['recipeID']);
+        //see if the user is logged in and has enough privilege
+        if(isset($_SESSION['user']) && $GLOBALS['user']->getPrivilege() >= 0) {
+
+
+            if(!Model::validateLike($GLOBALS['user']->getUserid(), $params['recipeID'])){
+                $f3->set('error', "You have already liked this recipe!");
+            } else {
+                //Like the Recipe!
+                Model::likeRecipe($params['recipeID'], $GLOBALS['user']->getUserid());
+                $f3->set('success', "You have liked this recipe!");
+            }
+        } else {
+            $f3->set('error', "You must be logged in to like a recipe!");
+        }
+
+    } else if(isset($_POST['dislike'])) {
+
+        //see if the user is logged in and has enough privilege
+        if(isset($_SESSION['user']) && $GLOBALS['user']->getPrivilege() >= 0) {
+
+            if(!Model::validateDislike($GLOBALS['user']->getUserid(), $params['recipeID'])){
+                $f3->set('error', "You have already disliked this recipe!");
+            } else {
+                //dislike the Recipe!
+                Model::dislikeRecipe($params['recipeID'], $GLOBALS['user']->getUserid());
+                $f3->set('success', "You have disliked this recipe!");
+            }
+        } else {
+            $f3->set('error', "You must be logged in to dislike a recipe!");
+        }
 
     }
-
-    // Title to use in template.
-    $title = "College Cuisine";
-
 
     //Gets the Recipe from the database.
     $result = Model::getRecipe($params['recipeID']);
 
+    // Title to use in template.
+    $title = $result['name'];
+
     // List of paths to stylesheets.
     $styles = array(
         // If you need a stylesheet do
-        //$f3->get('BASE').'/assets/styles/STYLESHEET-NAME.css
+        $f3->get('BASE').'/assets/styles/recipe.css'
     );
 
     // List of paths for sub-templates being used.
@@ -251,7 +264,7 @@ $f3->route('GET|POST /recipe/@recipeID', function($f3, $params) {
     // List of paths to scripts being used.
     $scripts = array(
         // If you need a script do
-        //$f3->get('BASE').'/assets/scripts/SCRIPT-NAME.js
+        $f3->get('BASE').'/assets/scripts/recipe-scripts.js'
     );
 
 
@@ -487,5 +500,6 @@ $f3->route('GET /registration/verify/@hash', function($f3, $params) {
     $template = new Template();
     echo $template->render('views/_base.html');
 });
+
 
 $f3->run();
