@@ -137,6 +137,7 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 
     }
 
+
     if(isset($_POST['submit'])){
 
         //Set Fat Free variables for Sticky
@@ -151,6 +152,9 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
 
         //See if there is any validation errors for inputs
         $errors = Validator::validateRecipe();
+
+        print_r($_POST);
+
 
         //If no validation errors...
         if($errors == null) {
@@ -189,7 +193,6 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
         // If you need a script do
         $f3->get('BASE').'/assets/scripts/recipe-scripts.js',
 
-        //testings php stickiness
         $f3->get('BASE').'/assets/scripts/validate-recipe.js'
     );
     $f3->set('title',    $title);

@@ -15,7 +15,7 @@ $('#btn-add-ingredient').click(function() {
         '    <button class="btn btn-danger btn-ingredient-delete" type="button"><img class="icon-delete" src="../assets/images/icons/close.svg" alt="Remove"></button>\n' +
         '</div>';
 
-    //console.log(CLONE_HTML);
+    console.log(CLONE_HTML);
     $('#ingredient-list').append(CLONE_HTML);
 
     // Add event listener to new node.
@@ -39,7 +39,7 @@ $('#btn-add-direct').click(function() {
         '    <button class="btn btn-danger btn-direct-delete" type="button"><img class="icon-delete" src="../assets/images/icons/close.svg" alt="Remove"></button>\n' +
         '</div>';
 
-    //console.log(CLONE_HTML);
+    console.log(CLONE_HTML);
     $('#direction-list').append(CLONE_HTML);
 
     // Add event listener to new node.
@@ -58,31 +58,19 @@ $('button.btn-delete-recipe').click(function() {
     //easier for github collab.
     const source = $('[data-source]').data('source');
 
-    //Yes or No alert to confirm they want to delete the account
+    //Yes or No alert to confirm the
     var confirmed = confirm("Are you sure you want to delete this user?");
-
-    //If yes, attempts to delete the recipe
     if(confirmed) {
-        //console.log(source);
-        //AJAX to use php
+
+        console.log(source);
         $.ajax({
             method: "POST",
-
-            //Page that verifys user
             url: "//" + source + "/model/scripts/delete-recipe.php",
             dataType: 'text',
-
-            //gets response from php page
             success: function (response) {
-                //Tells user if they deleted the recipe
-                //or if they are unauthorized
                 alert(response);
-
-                //if user is unauthorized, won't rediret to home page
                 if(response ==='Unauthorized'){
                     location.reload();
-
-                    //Redirect back to home page if recipe is deleted.
                 } else window.location.replace("//" + source + "/");
             }
 

@@ -100,16 +100,6 @@ class Validator
         //Default Value to initialize array
         $errors = array('There was an error in your submit recipe form:');
 
-        //For each value in the array, checks to see if the value is empty
-        foreach($_POST as $value){
-            $valid = self::notEmpty($value);
-            $error = "You are missing data, Please make sure all fields are not empty";
-            if(!$valid){
-                //Adds to array if there is a form missing any elements, then breaks the loop
-                array_push($errors, $error);
-                break;
-            }
-        }
 
         //Checks to see if the name is alphanumeric + space
         $valid = self::isAlphaNum($_POST['recipeName']);
