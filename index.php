@@ -153,9 +153,6 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
         //See if there is any validation errors for inputs
         $errors = Validator::validateRecipe();
 
-        print_r($_POST);
-
-
         //If no validation errors...
         if($errors == null) {
 
