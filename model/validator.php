@@ -24,14 +24,10 @@ class Validator
     {
         $invalid = array();
 
-        if(!preg_match('/^[a-zA-Z]+[a-zA-Z0-9._]+$/', $username)) {
-            $invalid[] = 'Username must be alphanumeric!';
-        }
-        if(strlen($username) <= 8) {
-            $invalid[] = 'Username must be at least 8 characters long!';
-        }
-        if(strlen($username) > 40) {
-            $invalid[] = 'Username cannot be longer than 40 characters long!';
+        $invalidUsername = self::validateUsername($username);
+
+        foreach($invalidUsername as $value) {
+            $invalid[] = $value;
         }
 
 
@@ -41,7 +37,7 @@ class Validator
             $invalid[] = $value;
         }
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (!self::validateEmail($email)) {
             $invalid[] = "Invalid email address!";
         }
 
@@ -89,70 +85,44 @@ class Validator
 
 
     /**
-     * Validates that the user can submit the form.
-     *
-     * Validates that the user can submit the form,
-     * correctly else return the user to the page of the form
-     * and have them enter the data correctly and also uploads the file
-     * to the server, if none are chosen then uses a default file, or if there's
-     * an error, reports it just a like the rest of the validation.
-     *
-     * @return array - Errors array to show errors in form.
+     * TODO
      */
     public static function validateRecipe()
     {
-        //Default Value to initialize array
         $errors = array('There was an error in your submit recipe form:');
-
-        //For each value in the array, checks to see if the value is empty
+        //echo sizeof($errors);
         foreach($_POST as $value){
             $valid = self::notEmpty($value);
             $error = "You are missing data, Please make sure all fields are not empty";
             if(!$valid){
-                //Adds to array if there is a form missing any elements, then breaks the loop
                 array_push($errors, $error);
                 break;
             }
         }
-
-        //Checks to see if the name is alphanumeric + space
         $valid = self::isAlphaNum($_POST['recipeName']);
         if(!$valid){
-            //Pushes to array if invalid
             array_push($errors, "There is an error in the Recipe Name, Please keep the name alphanumeric");
         }
-
-        //makes sure that the value is a number
         $valid = self::validateNum($_POST['prepTime']);
         if(!$valid){
             array_push($errors, "There is an error in the Prep Time, please keep it a positive number");
         }
-
-        //makes sure that the value is a number
         $valid = self::validateNum($_POST['cookTime']);
         if(!$valid){
             array_push($errors, "There is an error in the Cook Time, please keep it a positive number");
         }
-
-        //makes sure that the value is a number
         $valid = self::validateNum($_POST['servs']);
         if(!$valid){
             array_push($errors, "There is an error in the Servings, please keep it a positive number");
         }
-
-        //makes sure that the value is a number
         $valid = self::validateNum($_POST['cals']);
         if(!$valid){
             array_push($errors, "There is an error in the Calories, please keep it a positive number");
         }
-
-        //makes sure that the value is less than 255 chars
         $valid = self::validateTinyText($_POST['description']);
         if(!$valid){
             array_push($errors, "There is an error in the description, please try to make it under 255 characters");
         }
-
-        //Goes through ingreds array to make sure all are less than 255 chars
         foreach($_POST['ingreds'] as $value){
             $valid = self::validateTinyText($value);
             if(!$valid){
@@ -161,8 +131,6 @@ class Validator
                 break;
             }
         }
-
-        //Goes through directs array to make sure all are less than 255 chars
         foreach($_POST['directs'] as $value){
             $valid = self::validateTinyText($value);
             if(!$valid){
@@ -175,9 +143,8 @@ class Validator
         //Target Directory for file upload
         $target_dir = "assets/images/";
 
-        //Trys to upload file - taken from https://www.w3schools.com/php/php_file_upload.asp
+        //Target File to upload
         try{
-            //gets the file path to where you want to upload the image to
             $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
             $uploadOk = 1;
             //Image file type
@@ -221,30 +188,25 @@ class Validator
                     array_push($errors, "Sorry, there was an error uploading your file.");
                 }
             }
-            //If there is a problem with uploading the file, uses default image.
         }catch(Exception $e){
             $GLOBALS['target_file'] = 'assets/images/default.jpg';
         }
 
-        //if size of errors is one, no validation errors so return null array for
-        //comparison later.
+        //echo sizeof($errors);
         if(sizeof($errors)==1){
             $errors = null;
         }
-
-        //Returns errors array
         return $errors;
     }
 
     /**
      * Method that checks if a recipe name is empty.
      *
-     * @param $value mixed checks to see if input is empty
-     * @return boolean Returns true or false if empty.
+     * @return Returns true or false if empty.
      */
-    public static function notEmpty($value)
+    public static function notEmpty()
     {
-        if ($value == "") {
+        if ($_POST['recipeName'] == "") {
             return false;
         }
         return true;
@@ -253,7 +215,7 @@ class Validator
     /**
      * Method that returns whether the input is alphanumeric.
      *
-     * @param $data INT Input being compared.
+     * @param $data Input being compared.
      * @return bool Boolean representing test success or failure
      */
     public static function isAlphaNum($data)
@@ -267,7 +229,7 @@ class Validator
     /**
      * Method that checks if input is numeric.
      *
-     * @param $num INT Takes input
+     * @param $num Takes input
      * @return bool Returns boolean result.
      */
     public static function validateNum($num)
@@ -285,7 +247,7 @@ class Validator
      * Method for returning if the string is the proper
      * length for a tinytext value.
      *
-     * @param $data String Input being evaluated.
+     * @param $data Input being evaluated.
      * @return bool Returns boolean test result.
      */
     public static function validateTinyText($data)
@@ -294,6 +256,44 @@ class Validator
             return false;
         }
         return true;
+    }
+
+    /**
+     * Method that checks if a username is valid.
+     *
+     * @param $username String username being validated.
+     * @return array Returns an array of strings containing failed test results.
+     */
+    public static function validateUsername($username)
+    {
+        $invalid = array();
+
+        if(!preg_match('/^[a-zA-Z]+[a-zA-Z0-9._]+$/', $username)) {
+            $invalid[] = 'Username must be alphanumeric!';
+        }
+        if(strlen($username) <= 8) {
+            $invalid[] = 'Username must be at least 8 characters long!';
+        }
+        if(strlen($username) > 40) {
+            $invalid[] = 'Username cannot be longer than 40 characters long!';
+        }
+
+        return $invalid;
+    }
+
+    /**
+     * Function for validating email addresses.
+     *
+     * @param $email String address being checked.
+     * @return Returns true if input matches email format.
+     */
+    public static function validateEmail($email)
+    {
+        if(isset($email)) {
+            return filter_var($email, FILTER_VALIDATE_EMAIL);
+        }
+
+        return false;
     }
 
 

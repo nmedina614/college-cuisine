@@ -1,7 +1,10 @@
 <?php
 /**
- * Authors: Aaron Melhaff, Nolan Medina
- */
+ * File used for controlling website navigation and routing.
+ *
+ * @author Aaron Melhaff
+ * @author Nolan Medina
+*/
 
 //Begin session
 session_start();
@@ -98,7 +101,7 @@ $f3->route('GET|POST /login', function($f3) {
 
     if(isset($_POST['submit'])) {
 
-        $result = Model::login();
+        $result = Model::login($_POST['username'], $_POST['password']);
 
         // If login is successful, redirect to main page.
         if($result != false) {
@@ -344,7 +347,7 @@ $f3->route('GET|POST /profiles/@user/reset-password', function($f3, $params) {
 
         if(count($invalid) === 0) {
 
-            $f3->reroute('/');
+            $f3->reroute('/profiles/' . $GLOBALS['user']->getUsername());
 
         } else {
             // Store list of failure conditions in hive.
@@ -367,6 +370,56 @@ $f3->route('GET|POST /profiles/@user/reset-password', function($f3, $params) {
     $includes = array(
         'views/_nav.html',
         'views/_reset-password.html'
+    );
+
+    // List of paths to scripts being used.
+    $scripts = array();
+
+    // Store page attributes to hive.
+    $f3->set('title',    $title);
+    $f3->set('styles',   $styles);
+    $f3->set('includes', $includes);
+    $f3->set('scripts',  $scripts);
+
+    // Display template.
+    $template = new Template();
+    echo $template->render('views/_base.html');
+});
+
+// User Profile route
+$f3->route('GET|POST /profiles/@user/change-email', function($f3, $params) {
+
+    // Process posted form.
+    if(isset($_POST['submit'])) {
+
+        $newEmail = $_POST['newEmail'];
+        $invalid  = $GLOBALS['user']->changeEmail($newEmail);
+
+        if(empty($invalid)) {
+
+            $f3->reroute('/profiles/' . $GLOBALS['user']->getUsername());
+
+        } else {
+            // Store list of failure conditions in hive.
+            $f3->set('invalid', $invalid);
+        }
+    }
+
+    // Reroute if not logged in!
+    if(!Model::authorized()) {
+        $f3->reroute('/');
+    }
+
+    // Title to use in template.
+    $title = $params['user'];
+
+    // List of paths to stylesheets.
+    $styles = array();
+
+    // List of paths for sub-templates being used.
+    $includes = array(
+        'views/_nav.html',
+        'views/_change-email.html'
     );
 
     // List of paths to scripts being used.
@@ -500,6 +553,5 @@ $f3->route('GET /registration/verify/@hash', function($f3, $params) {
     $template = new Template();
     echo $template->render('views/_base.html');
 });
-
 
 $f3->run();

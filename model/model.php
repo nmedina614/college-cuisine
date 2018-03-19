@@ -16,7 +16,7 @@ require $_SERVER['DOCUMENT_ROOT'] . "/../config/cc_config.php";
  * database interactions.
  *
  * @author Aaron Melhaff <nash_melhaff@hotmail.com>
- * @author Nolan Medina <njmedina614@gmail.com>
+ * @author Nolan Medina <nmedina@mail.greenriver.edu>
  */
 class Model
 {
@@ -56,14 +56,14 @@ class Model
      *
      * @return bool Boolean representing whether the login was successful.
      */
-    public static function login()
+    public static function login($username, $password)
     {
 
         // Flush any old login sessions.
         session_reset();
 
         // Don't bother querying db if params are empty.
-        if(empty($_POST['username']) || empty($_POST['password'])) {
+        if(empty($username) || empty($password)) {
             return false;
         }
 
@@ -73,9 +73,9 @@ class Model
 
         $statement = self::$_dbh->prepare($sql);
 
-        $statement->bindParam(':username', $_POST['username'], PDO::PARAM_STR);
+        $statement->bindParam(':username', $username, PDO::PARAM_STR);
 
-        $statement->bindParam(':password', hash('sha256', $_POST['password'], false), PDO::PARAM_STR);
+        $statement->bindParam(':password', hash('sha256', $password, false), PDO::PARAM_STR);
 
         $statement->execute();
 
@@ -184,7 +184,7 @@ class Model
      * * 2: admin login.
      *
      * @param $needed Authority level needed.
-     * @return mixed - Returns whether the authority level is great enough.
+     * @return Returns whether the authority level is great enough.
      */
     public static function authorized($needed = 0)
     {
@@ -199,7 +199,7 @@ class Model
     /**
      * Method used to pull all users that are not admins.
      *
-     * @return mixed Returns an array of results.
+     * @return Returns an array of results.
      */
     public static function viewUsers()
     {
@@ -228,17 +228,40 @@ class Model
     public static function updatePassword($userid, $newPassword)
     {
         // State query
-        $updateQuery = 'UPDATE user SET password=SHA2(:newPassword, 256) WHERE userid=:userid';
+        $updateQuery = 'UPDATE user SET password=:newPassword WHERE userid=:userid';
 
         // Prepare database query.
         $statement = self::$_dbh->prepare($updateQuery);
 
         // Bind all parameters.
-        $statement->bindParam(':newPassword', $newPassword, PDO::PARAM_STR);
+        $statement->bindParam(':newPassword', hash('sha256', $newPassword, false), PDO::PARAM_STR);
         $statement->bindParam(':userid', $userid, PDO::PARAM_INT);
 
         // Launch Query.
         $statement->execute();
+    }
+
+    /**
+     * Method used to change the password of the user with
+     * the given id.
+     *
+     * @param $userid Integer id of the user whose password is being changed.
+     * @param $newPassword String new password for the given user.
+     */
+    public static function changeEmail($userid, $newEmail)
+    {
+        // State query
+        $updateQuery = 'UPDATE user SET email=:email WHERE userid=:userid';
+
+        // Prepare database query.
+        $statement = self::$_dbh->prepare($updateQuery);
+
+        // Bind all parameters.
+        $statement->bindParam(':email', $newEmail, PDO::PARAM_STR);
+        $statement->bindParam(':userid', $userid, PDO::PARAM_INT);
+
+        // Launch Query.
+        return $statement->execute();
     }
 
     /**
@@ -301,16 +324,21 @@ class Model
 
 
     /**
-     * Function to submit recipe to Database
-     *
-     * This function takes a image path and the user ID to insert into 2 database
-     * tables, one for the recipe with all the data from the form and the other
-     * showing who submitted the recipe.
-     *
-     * @param $path - Image path that is the name of the image the user uploaded
-     * @param $userID - The user id of the user uploading the recipe.
+     * TODO
      */
-    public static function insertRecipe($path, $userID) {
+    public static function insertRecipe($path) {
+
+        /*
+     * INSERT INTO `recipe` (
+     * `recipeid`, `name`, `prepTime`, `cookTime`, `servings`, `cal`
+     * , `descript`, `ingredients`, `directions`, `likes`) VALUES
+     * (NULL, 'Spaghetti', '5', '15', '4', '150',
+     * 'A classic Italian dish that is both cheap to make and delicious.',
+     * '16oz of Ground Beef, 16oz of Pasta Noodles, Salt, Pepper, Water, meatsauce',
+     * 'Boil Water, Put noodles in water, fry ground beef in pan
+     *      until cooked, add meat sauce to beef, once pasta is finished along with the
+     *      beef add pasta to plate followed by beef on top',
+     * '5'); */
 
         // Prepare a select to check if db contains queried params.
         $sql = 'INSERT INTO `recipe` (`name`, `prepTime`, 
@@ -319,10 +347,23 @@ class Model
                 :cookTime, :servings, :cal, :descript, :ingredients,
                 :directions, \'0\', :image)';
 
-        //Prepare Statement
         $statement = self::$_dbh->prepare($sql);
 
-        //Bind Params
+        /*
+     * Array ( [recipeName] => Spaghetti [prepTime] => 5 [cookTime] => 15
+     * [servs] => 4 [cals] => 150 [description] => A classic Italian masterpiece that you'll love
+     * [ingreds] => Array ( [0] => 16oz ground beef [1] => meat sauce [2] => water [3] => salt [4]
+     *      => pepper )
+     * [directs] => Array ( [0] => Start boiling water [1] => cook ground beef and add meat sauce to it
+     *      [2] => once finished w/ both, plate pasta then beef on top [3] => Enjoy ) )
+     */
+
+        echo $sql;
+
+        echo $_POST['recipeName'];
+
+        echo  implode(',',$_POST['ingreds']);
+
         $statement->bindParam(':recipeName', $_POST['recipeName'], PDO::PARAM_STR);
         $statement->bindParam(':prepTime', $_POST['prepTime'], PDO::PARAM_STR);
         $statement->bindParam(':cookTime', $_POST['cookTime'], PDO::PARAM_STR);
@@ -333,44 +374,12 @@ class Model
         $statement->bindParam(':directions', implode(',',$_POST['directs']), PDO::PARAM_STR);
         $statement->bindParam(':image', $path, PDO::PARAM_STR);
 
-        //Execute statement
         $statement->execute();
-
-        //Get the recipe ID
-        $sql = 'SELECT * FROM recipe ORDER BY recipeID DESC';
-
-        //Prepare statement
-        $stat2 = self::$_dbh->prepare($sql);
-
-        //Execute Statement
-        $stat2->execute();
-
-        //gets the recipe ID
-        $recipe = $stat2->fetch(PDO::FETCH_ASSOC);
-
-        //Uses the recipeID and the User ID to insert into table
-        $sql = 'INSERT INTO `user-recipe` (`userID`, `recipeID`) VALUES (:userID, :recipeID)';
-
-        //Prepare statement
-        $stat3 = self::$_dbh->prepare($sql);
-
-        //Bind Params
-        $stat3->bindParam(':userID', $userID, PDO::PARAM_INT);
-        $stat3->bindParam(':recipeID', $recipe['recipeid'], PDO::PARAM_INT);
-
-        //execute statement
-        $stat3->execute();
 
     }
 
     /**
-     * Gets all the recipes from the database
-     *
-     * Function that access the database and recieves all the
-     * recipes and then returns an array full of all of those
-     * recipes to then be looped and viewed on the home page.
-     *
-     * @return mixed Array that holds all recipes.
+     * TODO
      */
     public static function getAllRecipes()
     {
@@ -383,19 +392,13 @@ class Model
         // Launch Query.
         $statement->execute();
 
-        //return results from query.
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-     * Gets recipe based on ID
-     *
-     * Function that returns a recipe based on the
-     * id given to the function and returns that recipe
-     * to be viewed.
-     *
-     * @param $id - Recipe ID
-     * @return mixed - Recipe row from Database
+     * TODO
+     * @param $id
+     * @return mixed
      */
     public static function getRecipe($id)
     {
@@ -412,7 +415,6 @@ class Model
         // Launch Query.
         $statement->execute();
 
-        //Return row
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -438,15 +440,7 @@ class Model
     }
 
     /**
-     * Likes the recipe
-     *
-     * function that updates the recipe table row based on the
-     * recipe ID and increments the like status by adding 1, also
-     * adds to a like-recipes table to know if the user has already
-     * liked the recipe.
-     *
-     * @param $recipeID - the ID for the recipe
-     * @param $userID - the ID of the user
+     * TODO
      */
     public static function likeRecipe($recipeID, $userID)
     {
@@ -494,15 +488,7 @@ class Model
     }
 
     /**
-     * Likes the recipe
-     *
-     * function that updates the recipe table row based on the
-     * recipe ID and decrementing the like status by subtracting 1, also
-     * adds to a dislike-recipe table to know if the user has already
-     * disliked the recipe.
-     *
-     * @param $recipeID - the ID for the recipe
-     * @param $userID - the ID of the user
+     * TODO
      */
     public static function dislikeRecipe($recipeID, $userID)
     {
@@ -617,8 +603,6 @@ class Model
         // Return list of invalid inputs.
         return $invalid;
 
-
-
     }
 
     /**
@@ -631,7 +615,6 @@ class Model
      * basic. Then deletes the hash from the db.
      *
      * @param $hash String verification hash being compared.
-     * @return mixed true or false based on if statement executed correctly
      */
     public static function verifyAccount($hash)
     {
@@ -668,41 +651,30 @@ class Model
     }
 
     /**
-     * Makes sure the User can like the recipe.
+     * TODO
      *
-     * Validates that the user can like the recipe by
-     * checking the like recipes table to see if the user
-     * has already liked the recipe
-     *
-     * @param $userID - Users ID
-     * @param $recipeID - Recipe ID
-     * @return bool - True or False based on if the user liked the recipe or not.
+     * @param $userID
+     * @param $recipeID
+     * @return bool
      */
     public static function validateLike($userID, $recipeID){
 
-        //SQL statement
+
         $sql = 'SELECT * FROM `liked-recipes` WHERE userID = :userID AND recipeID = :recipeID';
 
-        //Prepare Statement
         $searchQuery = self::$_dbh->prepare($sql);
 
-
-        //Bind Params
         $searchQuery->bindParam(':userID', $userID, PDO::PARAM_STR);
         $searchQuery->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
 
-        //Execute Query
         $searchQuery->execute();
 
-        //Checks to see if its in the table
         $result = $searchQuery->rowCount();
 
-        //Returns false to say user cant like recipe
         if($result > 0){
 
             return false;
 
-        //returns true to say user can like recipe
         } else {
             return true;
         }
@@ -710,122 +682,51 @@ class Model
     }
 
     /**
-     * Makes sure the User can dislike the recipe.
+     * TODO
      *
-     * Validates that the user can dislike the recipe by
-     * checking the dislike recipes table to see if the user
-     * has already disliked the recipe
-     *
-     * @param $userID - Users ID
-     * @param $recipeID - Recipe ID
-     * @return bool - True or False based on if the user disliked the recipe or not.
+     * @param $userID
+     * @param $recipeID
+     * @return bool
      */
     public static function validateDislike($userID, $recipeID){
 
-
-        //SQL query
         $sql = 'SELECT * FROM `dislike-recipe` WHERE userID = :userID AND recipeID = :recipeID';
 
-        //Prepare Query
         $searchQuery = self::$_dbh->prepare($sql);
 
-        //Bind Params
         $searchQuery->bindParam(':userID', $userID, PDO::PARAM_STR);
         $searchQuery->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
 
-
-        //Execute
         $searchQuery->execute();
 
-        //Get row count
         $result = $searchQuery->rowCount();
 
-
-        //Return false to say user cannot dislike recipe
         if($result > 0){
 
             return false;
 
-        //return true if the user can dislike the recipe
         } else {
             return true;
         }
 
     }
 
-    /**
-     * Deletes the Recipe from the database
-     *
-     * Deletes the Recipe from the database and the user-recipeid table.
-     */
     public static function deleteRecipe() {
-
-        //Sql query
         $sql = 'DELETE FROM `user-recipe` WHERE `recipeID` = :recipeID';
 
-        //Prepare Query
-        $statement = self::$_dbh->prepare($sql);
-
-        //Bind params
-        $statement->bindParam(':recipeID', $_SESSION['recipeID'], PDO::PARAM_INT);
-
-        //Executes Delete
-        $statement->execute();
-
-        //SQL query
-        $sql = 'DELETE FROM `recipe` WHERE `recipeID` = :recipeID';
-
-        //Prepare statement
-        $statement = self::$_dbh->prepare($sql);
-
-        //Bind Params
-        $statement->bindParam(':recipeID', $_SESSION['recipeID'], PDO::PARAM_INT);
-
-        //Execute Delete
-        $statement->execute();
-    }
-
-    /**
-     * Validates if the user can delete the recipe
-     *
-     * Checks to see if the user is the one that submitted the
-     * recipe, if so return true, else return false
-     *
-     * @param $userID - ID of the user
-     * @param $recipeID - Recipe ID
-     * @return bool - True or false if user submitted recipe or not
-     */
-    public static function validateDelete($userID, $recipeID){
-
-        //SQL query
-        $sql = 'SELECT * FROM `user-recipe` WHERE `userID`= :userID AND `recipeID` = :recipeID';
-
-        //Prepare Query
         $searchQuery = self::$_dbh->prepare($sql);
 
-        //Bind Params
-        $searchQuery->bindParam(':userID', $userID, PDO::PARAM_STR);
-        $searchQuery->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+        $searchQuery->bindParam(':recipeID', $_SESSION['recipeID'], PDO::PARAM_INT);
 
-
-        //Execute
         $searchQuery->execute();
 
-        //Get row count
-        $result = $searchQuery->rowCount();
+        $sql = 'DELETE FROM `recipe` WHERE `recipeID` = :recipeID';
 
+        $searchQuery = self::$_dbh->prepare($sql);
 
-        //Return true to say user can delete the recipe
-        if($result > 0){
+        $searchQuery->bindParam(':recipeID', $_SESSION['recipeID'], PDO::PARAM_INT);
 
-            return true;
-
-            //return false if the user cannot delete the recipe
-        } else {
-            return false;
-        }
-
-
+        $searchQuery->execute();
     }
 
 }

@@ -93,7 +93,7 @@ class User
         // Information sent in email.
         $subject = "Password Reset";
         $message = 'Dear ' . $this->getUsername() .
-            'An administrator has reset your College-Cuisine password!' .
+            'An administrator has reset your College-Cuisine password! ' .
             "Your new password is $newPassword";
 
         // Send email to user email containing password.
@@ -121,7 +121,7 @@ class User
 
                 // Information sent in email.
                 $subject = "Password Change";
-                $message = 'Your password has been updated!' .
+                $message = 'Your college-cuisine password has been updated! ' .
                            'If this change was not made by you, contact an administrator!';
 
                 // Send email to user email containing password.
@@ -129,8 +129,42 @@ class User
             }
         }
         else return array('Old password didn\'t match.');
+    }
 
+    /**
+     * Method that changes the users email to the input parameter.
+     *
+     * @param $newEmail String representing the new email
+     */
+    public function changeEmail($newEmail)
+    {
 
+        // Ensure new password is viable.
+        $invalid = Validator::validateEmail($newEmail);
+
+        // If no errors are found, change password.
+        if($invalid) {
+
+            //TODO Add email
+
+            // If everything is valid, change users password.
+            $result = Model::changeEmail($this->getUserid(), $newEmail);
+
+            if($result) {
+                // Information sent in email.
+                $subject = "Email Change";
+                $message = 'Your college-cuisine account email has been changed! ' .
+                    'If this change was not made by you, contact an administrator!';
+
+                // Send email to user email containing password.
+                Model::sendMessage($newEmail, $subject, $message);
+            } else {
+                return 'Email address is already associated with another account!';
+            }
+
+        } else {
+            return 'Invalid email address format!';
+        }
     }
 
 }
