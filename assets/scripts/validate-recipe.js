@@ -55,10 +55,6 @@ $('#recipeForm').submit(function(){
     function validate(input){
         switch(input.name) {
 
-            //Validates name is alphanumberic and not empty
-            case 'recipeName':
-                return validateName(input.value);
-
             //Validates name is number and not empty
             case 'prepTime':
                 return validateNum(input.value);
@@ -94,21 +90,6 @@ $('#recipeForm').submit(function(){
         }
 
 
-
-    }
-
-
-    //validates name is not empty and is alphanumeric
-    function validateName(name){
-        if(name.length < 2) {
-            return false;
-        }
-
-        var letters = '/^[a-z\d-_\s]+$/i';
-        if(name.match(letters)) {
-            return true;
-        }
-        return false;
 
     }
 

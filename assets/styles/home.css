@@ -11,7 +11,7 @@
 /* Creates a custom card size */
 .card-custom {
 
-    width:23rem;
+    width:20rem;
     margin-top:2rem;
 
 }
@@ -19,7 +19,7 @@
 /* Sets limit for text */
 .width-limit{
 
-    width: 20rem;
+    width: 18rem;
 
 }
 
