@@ -4,7 +4,9 @@ A website for college students who don't always want to eat ramen and want somet
 
 # Requirements:
 * Separate all database/business logic:
-    * 
+    * Database Logic is kept in the model, 
+      Buisness Logic split into Validation Class
+      And assets/scripts
     
 * Routes are all using Fat-Free:
     * Cannot get to any web page directly, only from route, check index.php
