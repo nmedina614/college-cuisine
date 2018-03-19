@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>PHP</ID>
+  <OriginalElement>C:/Users/njmed/PhpstormProjects/greenriverdev/328/college-cuisine/model</OriginalElement>
+  <nodes>
+    <node x="445.0" y="345.0">\Moderator</node>
+    <node x="0.0" y="0.0">\Model</node>
+    <node x="0.0" y="603.0">\Validator</node>
+    <node x="322.0" y="0.0">\User</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="\Moderator" target="\User">
+      <point x="0.0" y="-69.5" />
+      <point x="0.0" y="147.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="349.5" y="678.0" />
+  <SelectedNodes>
+    <node>\Model</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constants</Category>
+    <Category>Methods</Category>
+    <Category>Constructors</Category>
+  </Categories>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
