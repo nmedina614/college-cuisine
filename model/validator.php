@@ -6,7 +6,7 @@
  * Class used to handle input validation.
  *
  * @author Aaron Melhaff <nash_melhaff@hotmail.com>
- * @author Nolan Medina <nmedina@mail.greenriver.edu>
+ * @author Nolan Medina <njmedina614@gmail.com>
  */
 class Validator
 {
