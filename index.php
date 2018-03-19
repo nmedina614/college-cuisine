@@ -176,16 +176,11 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
         //If no validation errors...
         if($errors == null) {
 
-            /*$target_file = "";
-
-            //Upload image file to server
-            include("model/scripts/upload.php");*/
-
             //get the path for the file
             $path = $GLOBALS['target_file'];
 
             //upload the recipe to the database
-            Model::insertRecipe($path);
+            Model::insertRecipe($path, $GLOBALS['user']->getUserid());
 
 
             //Reroute to homepage
@@ -216,7 +211,7 @@ $f3->route('GET|POST /recipe/new-recipe', function($f3) {
         $f3->get('BASE').'/assets/scripts/recipe-scripts.js',
 
         //testings php stickiness
-        //TODO uncomment://$f3->get('BASE').'/assets/scripts/validate-recipe.js'
+        $f3->get('BASE').'/assets/scripts/validate-recipe.js'
     );
     $f3->set('title',    $title);
     $f3->set('styles',   $styles);
