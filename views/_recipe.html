@@ -1,10 +1,10 @@
-<div class="container">
+<div class="container" data-source="{{ $_SERVER['HTTP_HOST'] }}{{ @BASE }}">
 
     <div <check if="isset(@error)">
-         <true>class="alert alert-danger" id="invalid-alert"</true>
+         <true>class="alert alert-danger alert-custom" id="invalid-alert"</true>
          </check>
         <check if="isset(@success)">
-            <true>class="alert alert-success" id="success-alert"</true>
+            <true>class="alert alert-success alert-custom" id="success-alert"</true>
         </check>
     >
 
@@ -30,10 +30,32 @@
 
     <form method="post" action="{{@BASE}}/recipe/{{@recipe['recipeid']}}">
 
-        <button class="btn btn-primary" type="submit" name="like">Like!</button>
-        <button class="btn btn-primary" type="submit" name="dislike">Dislike!</button>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                </div>
+                <div class="col">
+                </div>
+                <div class="col text-center">
+                    <button class="btn btn-primary btn-recipe" type="submit" name="like">Like!</button>
+                    <button class="btn btn-primary btn-recipe" type="submit" name="dislike">Dislike!</button>
+                </div>
+            </div>
+        </div>
 
     </form>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+            </div>
+            <div class="col">
+            </div>
+            <div class="col text-center">
+                <button class="btn btn-primary btn-delete-recipe btn-recipe"name="delete">Delete!</button>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Portfolio Item Row -->
@@ -77,7 +99,7 @@
         <ol>
 
         <repeat group="{{ @directions }}" value="{{ @direct }}">
-                <li>
+                <li class="list-custom">
                     <p>{{@direct}}</p>
                 </li>
             </repeat>

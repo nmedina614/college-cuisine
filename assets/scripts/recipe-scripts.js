@@ -42,3 +42,26 @@ $('#btn-add-direct').click(function() {
     });
 });
 
+
+$('button.btn-delete-recipe').click(function() {
+    const source = $('[data-source]').data('source');
+
+    var confirmed = confirm("Are you sure you want to delete this user?");
+    if(confirmed) {
+
+        console.log(source);
+        $.ajax({
+            method: "POST",
+            url: "//" + source + "/model/scripts/delete-recipe.php",
+            dataType: 'text',
+            success: function (response) {
+                alert(response);
+                if(response ==='Unauthorized'){
+                    location.reload();
+                } else window.location.replace("//" + source + "/");
+            }
+
+        });
+
+    }
+});

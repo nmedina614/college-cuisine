@@ -690,5 +690,22 @@ class Model
 
     }
 
+    public static function deleteRecipe() {
+        $sql = 'DELETE FROM `user-recipe` WHERE `recipeID` = :recipeID';
+
+        $searchQuery = self::$_dbh->prepare($sql);
+
+        $searchQuery->bindParam(':recipeID', $_SESSION['recipeID'], PDO::PARAM_INT);
+
+        $searchQuery->execute();
+
+        $sql = 'DELETE FROM `recipe` WHERE `recipeID` = :recipeID';
+
+        $searchQuery = self::$_dbh->prepare($sql);
+
+        $searchQuery->bindParam(':recipeID', $_SESSION['recipeID'], PDO::PARAM_INT);
+
+        $searchQuery->execute();
+    }
 
 }

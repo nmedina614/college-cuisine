@@ -11,7 +11,7 @@
                     <p>Privilege: {{ $GLOBALS['user']->getPrivilege() }}</p>
                 </div>
                 <div class="w-25 float-right">
-                    <a href="reset-password" class="btn btn-sm btn-outline-secondary mb-2"
+                    <a href="{{ $GLOBALS['user']->getUsername() }}/reset-password" class="btn btn-sm btn-outline-secondary mb-2"
                             id="btn-change-password">
                         Change Password
                     </a>
