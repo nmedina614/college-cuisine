@@ -32,6 +32,7 @@ $('#recipeForm').submit(function(){
     //If array isn't empty, there are errors so,
     if(invalidInputs.length != 0) {
 
+        $('#invalid-list').text("");
          //for each value in the array, append to div in html
          invalidInputs.forEach(function(value) {
             $('#invalid-list').append(value);
