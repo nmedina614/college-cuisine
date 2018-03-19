@@ -92,7 +92,9 @@ class User
 
         // Information sent in email.
         $subject = "Password Reset";
-        $message = "Your new password is $newPassword";
+        $message = 'Dear ' . $this->getUsername() .
+            'An administrator has reset your College-Cuisine password!' .
+            "Your new password is $newPassword";
 
         // Send email to user email containing password.
         Model::sendMessage($this->getEmail(), $subject, $message);
@@ -119,8 +121,8 @@ class User
 
                 // Information sent in email.
                 $subject = "Password Change";
-                $message = "Your password has been updated!
-                    If this change was not made by you, contact an administrator!";
+                $message = 'Your password has been updated!' .
+                           'If this change was not made by you, contact an administrator!';
 
                 // Send email to user email containing password.
                 Model::sendMessage($this->getEmail(), $subject, $message);
