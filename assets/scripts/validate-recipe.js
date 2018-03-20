@@ -104,7 +104,7 @@ $('#recipeForm').submit(function(){
             return false;
         }
 
-        var letters = '/^[a-z\d-_\s]+$/i';
+        var letters = '/^[a-z\d-_\s]+/i';
         if(name.match(letters)) {
             return true;
         }
