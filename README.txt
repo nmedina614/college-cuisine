@@ -5,8 +5,7 @@ A website for college students who don't always want to eat ramen and want somet
 # Requirements:
 * Separate all database/business logic:
     * Database Logic is kept in the model, 
-      Buisness Logic split into Validation Class
-      And assets/scripts
+      Buisness Logic split into Validation, User and Moderator Classes.
     
 * Routes are all using Fat-Free:
     * Cannot get to any web page directly, only from route, check index.php
@@ -16,7 +15,7 @@ A website for college students who don't always want to eat ramen and want somet
     
 * Data can be viewed, added, updated, and deleted
     * User can view recipes, add recipes, Like or Dislike the Recipe for updating
-    and delete recipes, also add users and change the privilege of the user.
+    and delete recipes, also view, add, update, delete and change the privilege of the user.
     
 * History of Commits by both team members
     * 90+ commits on Github from Both members
@@ -33,3 +32,4 @@ A website for college students who don't always want to eat ramen and want somet
     
 * Incorporates Jquery and Ajax
     * On recipe page, uses Ajax to verify if the user wants to delete the recipe.
+    * Administration page also uses Ajax to update Accounts.
