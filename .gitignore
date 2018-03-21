@@ -1,0 +1,8 @@
+vendor/
+
+.git/
+
+tmp/
+
+.lock
+
