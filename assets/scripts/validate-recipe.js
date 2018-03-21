@@ -85,8 +85,8 @@ $('#recipeForm').submit(function(){
 
             //Validates name is 255 char or less and not empty
             default:
-                console.log(input.name);
-                return false;
+                //console.log(input.name);
+                break;
         }
 
 
