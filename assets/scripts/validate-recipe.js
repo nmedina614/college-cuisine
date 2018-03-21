@@ -93,24 +93,7 @@ $('#recipeForm').submit(function(){
 
     }
 
-<<<<<<< HEAD
 
-    //validates name is not empty and is alphanumeric
-    function validateName(name){
-        if(name.length < 2) {
-            return false;
-        }
-
-        var letters = '/^[a-z\d-_\s]+/i';
-        if(name.match(letters)) {
-            return true;
-        }
-        return false;
-
-    }
-
-=======
->>>>>>> 94099d26d800d2014deec3c412aaa1ebdf234b9d
     //Validates num is not empty and a number
     function validateNum(num){
 
