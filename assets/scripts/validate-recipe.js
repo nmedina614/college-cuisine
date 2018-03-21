@@ -93,6 +93,7 @@ $('#recipeForm').submit(function(){
 
     }
 
+<<<<<<< HEAD
 
     //validates name is not empty and is alphanumeric
     function validateName(name){
@@ -108,6 +109,8 @@ $('#recipeForm').submit(function(){
 
     }
 
+=======
+>>>>>>> 94099d26d800d2014deec3c412aaa1ebdf234b9d
     //Validates num is not empty and a number
     function validateNum(num){
 
