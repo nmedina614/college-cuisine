@@ -320,7 +320,8 @@ $f3->route('GET /profiles/@user', function($f3, $params) {
     );
 
     // List of paths to scripts being used.
-    $scripts = array();
+    $scripts = array(
+    );
 
     // Store page attributes to hive.
     $f3->set('title',    $title);

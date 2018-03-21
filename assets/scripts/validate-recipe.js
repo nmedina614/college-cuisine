@@ -55,10 +55,6 @@ $('#recipeForm').submit(function(){
     function validate(input){
         switch(input.name) {
 
-            //Validates name is alphanumberic and not empty
-            case 'recipeName':
-                return validateName(input.value);
-
             //Validates name is number and not empty
             case 'prepTime':
                 return validateNum(input.value);
