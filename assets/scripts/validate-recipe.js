@@ -67,10 +67,6 @@ $('#recipeForm').submit(function(){
             case 'servs':
                 return validateNum(input.value);
 
-            //Validates name is number and not empty
-            case 'cals':
-                return validateNum(input.value);
-
             //Validates name is 255 char or less and not empty
             case 'description':
                 return validateTinyText(input.value);
@@ -85,7 +81,6 @@ $('#recipeForm').submit(function(){
 
             //Validates name is 255 char or less and not empty
             default:
-                console.log(input.name);
                 return true;
         }
 

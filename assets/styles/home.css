@@ -2,7 +2,7 @@
     card */
 .img-size-limit{
 
-    height: 150px;
+    height: 14rem;
     object-fit: cover;
 
 }
@@ -17,9 +17,9 @@
 }
 
 /* sets size for logo on home page */
-.logo2{
+.logo2 {
 
-    width:75px;
-    height:90px;
+    width: 75px;
+    height: 90px;
 
 }

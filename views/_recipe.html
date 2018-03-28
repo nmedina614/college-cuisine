@@ -25,7 +25,7 @@
 </div>
 
     <!-- Portfolio Item Heading -->
-    <h1 class="my-4">{{@recipe[name]}}</h1>
+    <h1 class="my-4">{{@recipe[name]}} <hr><h3>Likes: {{@recipe[likes]}}</h3></h1>
 
 
     <form method="post" action="{{@BASE}}/recipe/{{@recipe['recipeid']}}">
@@ -72,7 +72,7 @@
             <!-- Small Details added w/ SQL -->
             <ul>
                 <li>Servings: {{@recipe[servings]}}</li>
-                <li>Calories per Serving: {{@recipe[cal]}}</li>
+                <li>Calories per Serving: <check if="{{@recipe[cal]>-1}}"><true>{{@recipe[cal]}}</true><false>Unknown</false></check></li>
                 <li>Prep Time: {{@recipe[prepTime]}}</li>
                 <li>Cook Time: {{@recipe[cookTime]}}</li>
                 <li>Total Time: {{@recipe[prepTime] + @recipe[cookTime]}}</li>

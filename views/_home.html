@@ -23,13 +23,14 @@
             <repeat group="{{ @recipes }}" value="{{ @recipe }}">
 
                 <div class="col-12 col-md-6 col-lg-4 mt-4">
-                    <div class="card">
+                    <div class="card text-center">
                         <img class="card-img-top img-size-limit rounded" src="{{@recipe['image']}}" alt="RecipeImg">
                         <div class="card-body">
                             <a href="{{@BASE}}/recipe/{{@recipe['recipeid']}}">
                                 <h5 class="card-title">{{@recipe['name']}}</h5>
                             </a>
                             <p class="card-text text-truncate">{{@recipe['descript']}}</p>
+                            <p>Likes: {{@recipe['likes']}}</p>
                         </div>
                     </div>
                 </div>

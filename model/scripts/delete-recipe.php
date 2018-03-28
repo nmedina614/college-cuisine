@@ -35,7 +35,7 @@ if(isset($_SESSION['user'])) {
         //Response to the user.
         echo 'Recipe Deleted, Redirecting to home page';
 
-    }
+    } else echo "Unauthorized";
 
     //Unauthorized account if tries to delete.
 } else echo "Unauthorized";
