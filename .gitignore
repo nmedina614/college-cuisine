@@ -1,0 +1,8 @@
+# Ignored Directories
+vendor/
+.git/
+tmp/
+
+#Ignored Files
+composer.lock
+

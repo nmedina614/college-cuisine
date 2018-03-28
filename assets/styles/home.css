@@ -2,23 +2,8 @@
     card */
 .img-size-limit{
 
-    width: 18rem;
-    height: 18rem;
-
-}
-
-/* Creates a custom card size */
-.card-custom {
-
-    width:20rem;
-    margin-top:2rem;
-
-}
-
-/* Sets limit for text */
-.width-limit{
-
-    width: 18rem;
+    height: 150px;
+    object-fit: cover;
 
 }
 

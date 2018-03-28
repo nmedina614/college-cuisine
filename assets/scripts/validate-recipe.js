@@ -93,6 +93,7 @@ $('#recipeForm').submit(function(){
 
     }
 
+
     //Validates num is not empty and a number
     function validateNum(num){
 
