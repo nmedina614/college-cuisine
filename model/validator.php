@@ -126,12 +126,6 @@ class Validator
             array_push($errors, "There is an error in the Servings, please keep it a positive number");
         }
 
-        //makes sure that the value is a number
-        $valid = self::validateNum($_POST['cals']);
-        if(!$valid){
-            array_push($errors, "There is an error in the Calories, please keep it a positive number");
-        }
-
         //makes sure that the value is less than 255 chars
         $valid = self::validateTinyText($_POST['description']);
         if(!$valid){
