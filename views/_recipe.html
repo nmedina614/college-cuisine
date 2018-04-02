@@ -30,32 +30,19 @@
 
     <form method="post" action="{{@BASE}}/recipe/{{@recipe['recipeid']}}">
 
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                </div>
-                <div class="col">
-                </div>
-                <div class="col text-center">
-                    <button class="btn btn-primary btn-recipe" type="submit" name="like">Like!</button>
-                    <button class="btn btn-primary btn-recipe" type="submit" name="dislike">Dislike!</button>
-                </div>
-            </div>
+        <div class="btn-group btn-group-sm" role="group" aria-label="Like Options">
+            <button class="btn btn-dark btn-recipe" type="submit" name="like">
+                <img src="{{ @BASE }}/assets/images/icons/thumb-up.svg" alt="Like!">
+            </button>
+            <button class="btn btn-dark btn-recipe" type="submit" name="dislike">
+                <img src="{{ @BASE }}/assets/images/icons/thumb-down.svg" alt="Dislike!">
+            </button>
         </div>
+
+        <button class="btn btn-sm btn-dark btn-delete-recipe btn-recipe float-right"name="delete">Delete!</button>
+
 
     </form>
-
-    <div class="container">
-        <div class="row">
-            <div class="col">
-            </div>
-            <div class="col">
-            </div>
-            <div class="col text-center">
-                <button class="btn btn-primary btn-delete-recipe btn-recipe"name="delete">Delete!</button>
-            </div>
-        </div>
-    </div>
 
 
     <!-- Portfolio Item Row -->
